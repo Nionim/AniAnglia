@@ -12,7 +12,6 @@
 #import "AppColor.h"
 #import "LibanixartApi.h"
 #import "StringCvt.h"
-#import "TorrentAVAsset.h"
 
 @interface PlayerViewController : AVPlayerViewController
 
@@ -29,7 +28,6 @@
 @property(nonatomic, retain) AVPictureInPictureController* pip_controller;
 @property(nonatomic) BOOL just_restored_pip;
 
-@property(nonatomic, retain) TorrentAVResourceLoaderDelegate* torrent_rc_delegate;
 @end
 
 static const std::string_view preferred_quality = "720";
@@ -64,7 +62,6 @@ std::string choose_quality(const std::unordered_map<std::string, std::string>& q
     _source_position = -1;
     _api_proxy = [LibanixartApi sharedInstance];
     [self setupLayout];
-    _torrent_rc_delegate = [TorrentAVResourceLoaderDelegate new];
     
     return self;
 }
@@ -139,7 +136,6 @@ std::string choose_quality(const std::unordered_map<std::string, std::string>& q
 -(void)runPlayer {
     _player_view_controller.player = [AVPlayer playerWithURL:_selected_stream_url];
     AVURLAsset* asset = (AVURLAsset*)_player_view_controller.player.currentItem.asset;
-    [asset.resourceLoader setDelegate:_torrent_rc_delegate queue:dispatch_queue_create("TorrentRepo loader", nil)];
     [_player_view_controller.player play];
     
     _player_view_controller.view.backgroundColor = [UIColor blackColor];

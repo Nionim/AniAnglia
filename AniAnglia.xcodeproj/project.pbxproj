@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		EF0D7D192D26F0E7000E516A /* libanixart.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF0D7D182D26F0E7000E516A /* libanixart.xcframework */; };
-		EF0D7D1D2D26F0F9000E516A /* libtorrentrepo.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF0D7D1C2D26F0F9000E516A /* libtorrentrepo.xcframework */; };
 		EF15C9222DF8582100335578 /* NamedSectionView.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF15C9212DF8582100335578 /* NamedSectionView.mm */; };
 		EF17A2E62DB6B259003429FC /* ProfilesPageableDataProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF17A2E52DB6B259003429FC /* ProfilesPageableDataProvider.mm */; };
 		EF1A7F0E2DB5C73600E03494 /* ReleasesPageableDataProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF1A7F0D2DB5C73600E03494 /* ReleasesPageableDataProvider.mm */; };
@@ -44,7 +43,6 @@
 		EF7CD2912DA040EC00F88227 /* ProfileListsView.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF7CD2902DA040EC00F88227 /* ProfileListsView.mm */; };
 		EF7CD2952DA0648C00F88227 /* ProfileFriendsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF7CD2942DA0648C00F88227 /* ProfileFriendsViewController.mm */; };
 		EF8097C52D0CC6F2006F18DF /* FilterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF8097C42D0CC6F2006F18DF /* FilterViewController.mm */; };
-		EF8097CA2D15CB70006F18DF /* libtorrent.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF8097C62D15B92C006F18DF /* libtorrent.xcframework */; };
 		EF8097CE2D15CF85006F18DF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF8097CD2D15CF85006F18DF /* SystemConfiguration.framework */; };
 		EF8097D02D15DC05006F18DF /* try_signal.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF8097CF2D15DC05006F18DF /* try_signal.xcframework */; };
 		EF875C802C78FB7400DAECB1 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF875C7F2C78FB7400DAECB1 /* Security.framework */; };
@@ -72,7 +70,6 @@
 		EFB856752DFF104800FCD712 /* CollectionsPageableDataProvider.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFB856742DFF104800FCD712 /* CollectionsPageableDataProvider.mm */; };
 		EFBE9D842DFB4781002B6B49 /* ProfileTableViewCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFBE9D832DFB4781002B6B49 /* ProfileTableViewCell.mm */; };
 		EFC6077B2C76169500BA8B44 /* TextErrorField.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFC6077A2C76169500BA8B44 /* TextErrorField.mm */; };
-		EFCBC3A52D54F6C600080866 /* TorrentAVAsset.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFCBC3A42D54F6C600080866 /* TorrentAVAsset.mm */; };
 		EFCE61182DFB2538008431CA /* CenteredCollectionViewFlowLayout.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFCE61172DFB2538008431CA /* CenteredCollectionViewFlowLayout.mm */; };
 		EFCE611B2DFB2E12008431CA /* ReleasesVotesTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFCE611A2DFB2E12008431CA /* ReleasesVotesTableViewController.mm */; };
 		EFCE61202DFB3597008431CA /* ProfilesTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFCE611F2DFB3597008431CA /* ProfilesTableViewController.mm */; };
@@ -1384,8 +1381,6 @@
 		EFBE9D832DFB4781002B6B49 /* ProfileTableViewCell.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ProfileTableViewCell.mm; sourceTree = "<group>"; };
 		EFC6077A2C76169500BA8B44 /* TextErrorField.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TextErrorField.mm; sourceTree = "<group>"; };
 		EFC6077C2C7616B200BA8B44 /* TextErrorField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextErrorField.h; sourceTree = "<group>"; };
-		EFCBC3A42D54F6C600080866 /* TorrentAVAsset.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TorrentAVAsset.mm; sourceTree = "<group>"; };
-		EFCBC3A62D54F6E900080866 /* TorrentAVAsset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TorrentAVAsset.h; sourceTree = "<group>"; };
 		EFCE61162DFB2523008431CA /* CenteredCollectionViewFlowLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CenteredCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		EFCE61172DFB2538008431CA /* CenteredCollectionViewFlowLayout.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CenteredCollectionViewFlowLayout.mm; sourceTree = "<group>"; };
 		EFCE61192DFB2E00008431CA /* ReleasesVotesTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReleasesVotesTableViewController.h; sourceTree = "<group>"; };
@@ -1433,11 +1428,9 @@
 				EF4941152C723F8600832A6C /* CoreGraphics.framework in Frameworks */,
 				EFD5CD6E2CDABD1700A1E057 /* boost_container.xcframework in Frameworks */,
 				EFD5CD742CDABD1700A1E057 /* boost_system.xcframework in Frameworks */,
-				EF0D7D1D2D26F0F9000E516A /* libtorrentrepo.xcframework in Frameworks */,
 				EFD5CD722CDABD1700A1E057 /* boost_regex.xcframework in Frameworks */,
 				EF4941132C723F0700832A6C /* UIKit.framework in Frameworks */,
 				EF8097CE2D15CF85006F18DF /* SystemConfiguration.framework in Frameworks */,
-				EF8097CA2D15CB70006F18DF /* libtorrent.xcframework in Frameworks */,
 				EF875C802C78FB7400DAECB1 /* Security.framework in Frameworks */,
 				EFD5CD792CDABD3800A1E057 /* curlpp.xcframework in Frameworks */,
 				EFA1F9402CB497D600555A26 /* AVKit.framework in Frameworks */,
@@ -1531,7 +1524,6 @@
 		EF44D0D22CD6A3D600C8B608 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				EFCBC3A32D54F6A600080866 /* Torrent */,
 				EFCBC3A22D54F67A00080866 /* Anixart */,
 				EFC6077C2C7616B200BA8B44 /* TextErrorField.h */,
 				EFC6077A2C76169500BA8B44 /* TextErrorField.mm */,
@@ -3579,15 +3571,6 @@
 			path = Anixart;
 			sourceTree = "<group>";
 		};
-		EFCBC3A32D54F6A600080866 /* Torrent */ = {
-			isa = PBXGroup;
-			children = (
-				EFCBC3A42D54F6C600080866 /* TorrentAVAsset.mm */,
-				EFCBC3A62D54F6E900080866 /* TorrentAVAsset.h */,
-			);
-			path = Torrent;
-			sourceTree = "<group>";
-		};
 		EFCE611C2DFB3551008431CA /* Profiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -3742,7 +3725,6 @@
 				EFC6077B2C76169500BA8B44 /* TextErrorField.mm in Sources */,
 				EF65E34B2D8393BE00114102 /* SearchViewController.m in Sources */,
 				EF3568AF2DA95D0800086593 /* SettingsSecurityViewController.mm in Sources */,
-				EFCBC3A52D54F6C600080866 /* TorrentAVAsset.mm in Sources */,
 				EF5A3CCC2C7FA18A00B4F637 /* MainViewController.mm in Sources */,
 				EF9DAC982DFA2FEF0020C182 /* ReleasesHistoryTableViewController.mm in Sources */,
 				EF5A3CD22C7FA1BA00B4F637 /* ProfileViewController.mm in Sources */,
@@ -3943,7 +3925,7 @@
 				CODE_SIGN_ENTITLEMENTS = AniAnglia/AniAnglia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = 4G5LGK558P;
+				DEVELOPMENT_TEAM = CH7CVD4PVH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AniAnglia/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
@@ -3958,7 +3940,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.9;
-				PRODUCT_BUNDLE_IDENTIFIER = org.aateam.AniAnglia1;
+				PRODUCT_BUNDLE_IDENTIFIER = org.aateam.AniAnglia;
 				PRODUCT_NAME = AniAngliaXIX;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3973,7 +3955,7 @@
 				CODE_SIGN_ENTITLEMENTS = AniAnglia/AniAnglia.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = 4G5LGK558P;
+				DEVELOPMENT_TEAM = CH7CVD4PVH;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AniAnglia/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
@@ -3988,7 +3970,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.9;
-				PRODUCT_BUNDLE_IDENTIFIER = org.aateam.AniAnglia1;
+				PRODUCT_BUNDLE_IDENTIFIER = org.aateam.AniAnglia;
 				PRODUCT_NAME = AniAngliaXIX;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
