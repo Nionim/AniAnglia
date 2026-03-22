@@ -1,10 +1,6 @@
-name: Build iOS App for TrollStore
+name: Build iOS App
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
