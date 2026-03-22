@@ -1,93 +1,57 @@
-name: Build iOS app
-# Just ai slop
+name: Build iOS App for TrollStore
+
 on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Check for Podfile
-        id: check_podfile
-        run: |
-          if [ -f "Podfile" ]; then
-            echo "has_podfile=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_podfile=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Install CocoaPods dependencies
-        if: steps.check_podfile.outputs.has_podfile == 'true'
-        run: |
-          gem install cocoapods
-          pod install
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Select Xcode version
-        run: sudo xcode-select -switch /Applications/Xcode_15.4.app
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Determine project or workspace
-        id: project_type
+      - name: Build project
         run: |
-          if [ -f "AniAnglia.xcworkspace" ]; then
-            echo "project_path=AniAnglia.xcworkspace" >> $GITHUB_OUTPUT
-            echo "is_workspace=true" >> $GITHUB_OUTPUT
-          else
-            echo "project_path=AniAnglia.xcodeproj" >> $GITHUB_OUTPUT
-            echo "is_workspace=false" >> $GITHUB_OUTPUT
+          xcodebuild -project AniAnglia.xcodeproj \
+            -scheme iOSAnixart \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=NO \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+
+      - name: Locate .app bundle
+        id: locate_app
+        run: |
+          APP_PATH=$(find build/Build/Products/Release-iphoneos -name "*.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: .app bundle not found"
+            exit 1
           fi
+          echo "app_path=$APP_PATH" >> $GITHUB_OUTPUT
+          echo "Found app at: $APP_PATH"
 
-      - name: Create Export Options Plist
+      - name: Create Payload and package IPA
         run: |
-          cat > ExportOptions.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>development</string>
-            <key>signingStyle</key>
-            <string>automatic</string>
-            <key>stripSwiftSymbols</key>
-            <true/>
-            <key>uploadSymbols</key>
-            <true/>
-          </dict>
-          </plist>
-          EOF
+          APP_PATH="${{ steps.locate_app.outputs.app_path }}"
+          APP_NAME=$(basename "$APP_PATH")
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          zip -r AniAnglia.ipa Payload
+          rm -rf Payload
 
-      - name: Archive project
-        run: |
-          if [ "${{ steps.project_type.outputs.is_workspace }}" == "true" ]; then
-            xcodebuild archive \
-              -workspace "${{ steps.project_type.outputs.project_path }}" \
-              -scheme iOSAnixart \
-              -archivePath $PWD/build/AniAnglia.xcarchive \
-              -destination 'generic/platform=iOS' \
-              -allowProvisioningUpdates \
-              CODE_SIGNING_ALLOWED=YES
-          else
-            xcodebuild archive \
-              -project "${{ steps.project_type.outputs.project_path }}" \
-              -scheme iOSAnixart \
-              -archivePath $PWD/build/AniAnglia.xcarchive \
-              -destination 'generic/platform=iOS' \
-              -allowProvisioningUpdates \
-              CODE_SIGNING_ALLOWED=YES
-          fi
-
-      - name: Export IPA
-        run: |
-          xcodebuild -exportArchive \
-            -archivePath $PWD/build/AniAnglia.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath $PWD/build
-
-      - name: Upload IPA as artifact
+      - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
           name: AniAnglia.ipa
-          path: build/AniAnglia.ipa
+          path: AniAnglia.ipa
+          retention-days: 7
