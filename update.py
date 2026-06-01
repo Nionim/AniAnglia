@@ -42,6 +42,13 @@ def sync():
     for ref in proj.objects.get_objects_in_section('PBXFileReference'):
         path = getattr(ref, 'path', None)
         if not path: continue
+        if path.endswith("Info.plist") and ("xcframework" in path or Path(path).parent != Path("")):
+            if path == "Info.plist": continue
+            proj.remove_files_by_path(path, tree=getattr(ref, 'sourceTree', TreeType.SOURCE_ROOT))
+
+    for ref in proj.objects.get_objects_in_section('PBXFileReference'):
+        path = getattr(ref, 'path', None)
+        if not path: continue
         full = project_dir / path
         if not full.exists() or Path(path).suffix not in ALL_EXTENSIONS:
             proj.remove_files_by_path(path, tree=getattr(ref, 'sourceTree', TreeType.SOURCE_ROOT))
@@ -52,9 +59,7 @@ def sync():
         if any(part in IGNORE_DIRS for part in file_path.parts): continue
         if file_path.suffix not in ALL_EXTENSIONS: continue
 
-        if file_path.name == "Info.plist" and "xcframework" in str(file_path.parents):
-            continue
-
+        if file_path.name == "Info.plist" and "xcframework" in str(file_path.parents): continue
         rel = str(file_path.relative_to(source_dir)).replace('\\', '/')
         existing = proj.get_files_by_path(rel, tree=TreeType.SOURCE_ROOT)
         if existing: continue
