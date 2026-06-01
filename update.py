@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 from pbxproj import XcodeProject
+from pbxproj.pbxextensions.ProjectFiles import TreeType
 
 PROJECT_PATH = "AniSaturn.xcodeproj/project.pbxproj"
 SOURCE_ROOT = "AniSaturn/"
@@ -11,57 +12,60 @@ RESOURCE_EXTENSIONS = {'.strings', '.xib', '.storyboard', '.xcassets', '.plist',
 ALL_EXTENSIONS = SOURCE_EXTENSIONS | RESOURCE_EXTENSIONS
 IGNORE_DIRS = {'.git', 'build', 'DerivedData', 'Pods', 'node_modules', '__pycache__', '.idea', '.vscode', '.zed'}
 
+
 def sync():
     if not os.path.exists(PROJECT_PATH):
         print(f"Project file not found: {PROJECT_PATH}")
         return
 
     proj = XcodeProject.load(PROJECT_PATH)
-    root_group_name = Path(SOURCE_ROOT).name
-    root = proj.get_or_create_group(root_group_name)
-
     project_dir = Path(PROJECT_PATH).parent.parent
+
+    root_group_name = Path(SOURCE_ROOT).name
+    groups = proj.get_groups_by_name(root_group_name)
+    if groups:
+        root = groups[0]
+        if getattr(root, 'sourceTree', None) != TreeType.SOURCE_ROOT:
+            root.sourceTree = TreeType.SOURCE_ROOT
+    else:
+        root = proj.add_group(
+            name=root_group_name,
+            path=SOURCE_ROOT.rstrip('/'),
+            source_tree=TreeType.SOURCE_ROOT
+        )
+
     source_dir = project_dir / SOURCE_ROOT
     if not source_dir.exists():
         print(f"Cannot find source directory: {source_dir}")
         return
 
-    # Удаляем отсутствующие файлы
-    for ref in proj.objects.get_objects('PBXFileReference'):
-        path = ref.get('path')
-        if not path:
-            continue
+    for ref in proj.objects.get_objects_in_section('PBXFileReference'):
+        path = getattr(ref, 'path', None)
+        if not path: continue
         full = project_dir / path
         if not full.exists() or Path(path).suffix not in ALL_EXTENSIONS:
-            proj.remove_file_by_path(path)
+            proj.remove_files_by_path(path, tree=getattr(ref, 'sourceTree', TreeType.SOURCE_ROOT))
+            print(f"Removed: {path}")
 
-    # Добавляем новые файлы
     for file_path in source_dir.rglob('*'):
-        if not file_path.is_file():
-            continue
-        if any(p in IGNORE_DIRS for p in file_path.parts):
-            continue
-        if file_path.suffix not in ALL_EXTENSIONS:
-            continue
+        if not file_path.is_file(): continue
+        if any(part in IGNORE_DIRS for part in file_path.parts): continue
+        if file_path.suffix not in ALL_EXTENSIONS: continue
 
         rel = str(file_path.relative_to(source_dir)).replace('\\', '/')
-        if proj.get_file_by_path(rel):
-            continue
+        existing = proj.get_files_by_path(rel, tree=TreeType.SOURCE_ROOT)
+        if existing: continue
 
-        group = root
-        for comp in os.path.dirname(rel).split('/'):
-            if comp:
-                group = group.get_or_create_group(comp)
+        parent = root
+        dirname = os.path.dirname(rel)
+        if dirname:
+            for comp in dirname.split('/'):
+                if comp: parent = proj.get_or_create_group(comp, parent=parent)
 
-        fr = proj.add_file(rel, parent=group, tree='SOURCE_ROOT')
-        if fr:
-            if file_path.suffix in SOURCE_EXTENSIONS:
-                proj.add_file_to_build_phase(fr, phase='sources')
-            elif file_path.suffix in RESOURCE_EXTENSIONS:
-                proj.add_file_to_build_phase(fr, phase='resources')
+        proj.add_file(rel, parent=parent, tree=TreeType.SOURCE_ROOT)
+        print(f"Added: {rel}")
 
     proj.save()
-    print("Synchronization complete.")
 
 if __name__ == "__main__":
     sync()
