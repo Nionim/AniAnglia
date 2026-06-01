@@ -21,6 +21,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Sync Xcode project
+        run: |
+          pip install pbxproj
+          python update.py
+
       - name: Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
