@@ -52,6 +52,9 @@ def sync():
         if any(part in IGNORE_DIRS for part in file_path.parts): continue
         if file_path.suffix not in ALL_EXTENSIONS: continue
 
+        if file_path.name == "Info.plist" and "xcframework" in str(file_path.parents):
+            continue
+
         rel = str(file_path.relative_to(source_dir)).replace('\\', '/')
         existing = proj.get_files_by_path(rel, tree=TreeType.SOURCE_ROOT)
         if existing: continue
