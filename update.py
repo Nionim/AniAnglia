@@ -2,7 +2,7 @@
 import os
 from pathlib import Path
 from pbxproj import XcodeProject
-from pbxproj.pbxextensions.ProjectFiles import TreeType
+from pbxproj.pbxextensions.ProjectFiles import TreeType, FileOptions
 
 PROJECT_PATH = "AniSaturn.xcodeproj/project.pbxproj"
 SOURCE_ROOT = "AniSaturn/"
@@ -51,10 +51,16 @@ def sync():
     for ref in proj.objects.get_objects_in_section('PBXFileReference'):
         path = getattr(ref, 'path', None)
         if not path: continue
+        if path == "Info.plist": continue
         full = project_dir / path
         if not full.exists() or Path(path).suffix not in ALL_EXTENSIONS:
             proj.remove_files_by_path(path, tree=getattr(ref, 'sourceTree', TreeType.SOURCE_ROOT))
             print(f"Removed: {path}")
+
+    root_plist_refs = proj.get_files_by_path("Info.plist", tree=TreeType.SOURCE_ROOT)
+    for ref in root_plist_refs:
+        build_files = proj.get_build_files_for_file(ref.get_id())
+        for bf in build_files: bf.remove(recursive=True)
 
     for file_path in source_dir.rglob('*'):
         if not file_path.is_file(): continue
@@ -62,9 +68,11 @@ def sync():
         if file_path.suffix not in ALL_EXTENSIONS: continue
 
         rel_path = file_path.relative_to(source_dir)
+        rel = str(rel_path).replace('\\', '/')
+
+        if rel == "Info.plist": continue
         if file_path.name == "Info.plist" and is_inside_xcframework(str(rel_path)): continue
 
-        rel = str(rel_path).replace('\\', '/')
         existing = proj.get_files_by_path(rel, tree=TreeType.SOURCE_ROOT)
         if existing: continue
 
