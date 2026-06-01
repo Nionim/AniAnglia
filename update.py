@@ -4,7 +4,7 @@ from pathlib import Path
 from pbxproj import XcodeProject
 
 PROJECT_PATH = "AniSaturn.xcodeproj/project.pbxproj"
-SOURCE_ROOT = "AniSaturn/"
+SOURCE_ROOT = "AniSaturn/AniSaturn"   # при необходимости измените
 
 SOURCE_EXTENSIONS = {'.m', '.mm', '.h', '.c', '.cpp', '.swift', '.strings', '.xib', '.storyboard'}
 RESOURCE_EXTENSIONS = {'.strings', '.xib', '.storyboard', '.xcassets', '.plist', '.png', '.jpg'}
@@ -22,34 +22,46 @@ def sync():
 
     project_dir = Path(PROJECT_PATH).parent.parent
     source_dir = project_dir / SOURCE_ROOT
-    if not source_dir.exists(): 
-        print(f"Cannot found {source_dir}")
+    if not source_dir.exists():
+        print(f"Cannot find source directory: {source_dir}")
         return
 
-    for ref in list(proj.objects.get_objects_of_type('PBXFileReference')):
+    # Удаляем отсутствующие файлы
+    for ref in proj.objects.get_objects('PBXFileReference'):
         path = ref.get('path')
-        if not path: continue
+        if not path:
+            continue
         full = project_dir / path
         if not full.exists() or Path(path).suffix not in ALL_EXTENSIONS:
             proj.remove_file_by_path(path)
 
+    # Добавляем новые файлы
     for file_path in source_dir.rglob('*'):
-        if not file_path.is_file(): continue
-        if any(p in IGNORE_DIRS for p in file_path.parts): continue
-        if file_path.suffix not in ALL_EXTENSIONS: continue
+        if not file_path.is_file():
+            continue
+        if any(p in IGNORE_DIRS for p in file_path.parts):
+            continue
+        if file_path.suffix not in ALL_EXTENSIONS:
+            continue
 
         rel = str(file_path.relative_to(source_dir)).replace('\\', '/')
-        if proj.get_file_by_path(rel): continue
+        if proj.get_file_by_path(rel):
+            continue
 
         group = root
         for comp in os.path.dirname(rel).split('/'):
-            if comp: group = group.get_or_create_group(comp)
+            if comp:
+                group = group.get_or_create_group(comp)
 
         fr = proj.add_file(rel, parent=group, tree='SOURCE_ROOT')
         if fr:
-            if file_path.suffix in SOURCE_EXTENSIONS: proj.add_file_to_build_phase(fr, phase='sources')
-            elif file_path.suffix in RESOURCE_EXTENSIONS: proj.add_file_to_build_phase(fr, phase='resources')
+            if file_path.suffix in SOURCE_EXTENSIONS:
+                proj.add_file_to_build_phase(fr, phase='sources')
+            elif file_path.suffix in RESOURCE_EXTENSIONS:
+                proj.add_file_to_build_phase(fr, phase='resources')
+
     proj.save()
+    print("Synchronization complete.")
 
 if __name__ == "__main__":
     sync()
