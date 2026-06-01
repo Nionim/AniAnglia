@@ -16,7 +16,7 @@ jobs:
       - name: Build project
         run: |
           xcodebuild -project AniSaturn.xcodeproj \
-            -scheme iOSAnixart \
+            -scheme AniSaturn \
             -configuration Release \
             -sdk iphoneos \
             -derivedDataPath build \
