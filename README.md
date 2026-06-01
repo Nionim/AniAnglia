@@ -36,3 +36,13 @@ git clone https://github.com/AniSaturn/AniSaturn
 4. Спрятать всю китайскую ***** из списка с аниме
 5. Бябябя Бебебе Бубубу
 ```
+
+---
+
+<p align="center">
+    <a href="#">
+        <img src="https://img.shields.io/github/last-commit/AniSaturn/AniSaturn?display_timestamp=committer&style=flat-square&color=000000"></a>   
+    <a href="#">
+        <img src="https://img.shields.io/github/created-at/AniSaturn/AniSaturn?style=flat-square&color=000000"></a>
+</p>
+
