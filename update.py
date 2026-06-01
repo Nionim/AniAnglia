@@ -12,6 +12,9 @@ RESOURCE_EXTENSIONS = {'.strings', '.xib', '.storyboard', '.xcassets', '.plist',
 ALL_EXTENSIONS = SOURCE_EXTENSIONS | RESOURCE_EXTENSIONS
 IGNORE_DIRS = {'.git', 'build', 'DerivedData', 'Pods', 'node_modules', '__pycache__', '.idea', '.vscode', '.zed'}
 
+def is_inside_xcframework(path: str) -> bool:
+    parts = Path(path).parts
+    return any('.xcframework' in part for part in parts)
 
 def sync():
     if not os.path.exists(PROJECT_PATH):
@@ -42,8 +45,7 @@ def sync():
     for ref in proj.objects.get_objects_in_section('PBXFileReference'):
         path = getattr(ref, 'path', None)
         if not path: continue
-        if path.endswith("Info.plist") and ("xcframework" in path or Path(path).parent != Path("")):
-            if path == "Info.plist": continue
+        if path.endswith('Info.plist') and is_inside_xcframework(path):
             proj.remove_files_by_path(path, tree=getattr(ref, 'sourceTree', TreeType.SOURCE_ROOT))
 
     for ref in proj.objects.get_objects_in_section('PBXFileReference'):
@@ -59,8 +61,10 @@ def sync():
         if any(part in IGNORE_DIRS for part in file_path.parts): continue
         if file_path.suffix not in ALL_EXTENSIONS: continue
 
-        if file_path.name == "Info.plist" and "xcframework" in str(file_path.parents): continue
-        rel = str(file_path.relative_to(source_dir)).replace('\\', '/')
+        rel_path = file_path.relative_to(source_dir)
+        if file_path.name == "Info.plist" and is_inside_xcframework(str(rel_path)): continue
+
+        rel = str(rel_path).replace('\\', '/')
         existing = proj.get_files_by_path(rel, tree=TreeType.SOURCE_ROOT)
         if existing: continue
 
@@ -72,7 +76,6 @@ def sync():
 
         proj.add_file(rel, parent=parent, tree=TreeType.SOURCE_ROOT)
         print(f"Added: {rel}")
-
     proj.save()
 
 if __name__ == "__main__":
