@@ -15,7 +15,7 @@ jobs:
 
       - name: Build project
         run: |
-          xcodebuild -project AniAnglia.xcodeproj \
+          xcodebuild -project AniSaturn.xcodeproj \
             -scheme iOSAnixart \
             -configuration Release \
             -sdk iphoneos \
@@ -42,12 +42,12 @@ jobs:
           APP_NAME=$(basename "$APP_PATH")
           mkdir -p Payload
           cp -R "$APP_PATH" Payload/
-          zip -r AniAnglia.ipa Payload
+          zip -r AniSaturn.ipa Payload
           rm -rf Payload
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AniAnglia.ipa
-          path: AniAnglia.ipa
+          name: AniSaturn.ipa
+          path: AniSaturn.ipa
           retention-days: 7

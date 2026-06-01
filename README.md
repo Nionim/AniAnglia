@@ -1,13 +1,13 @@
 <p align="center">
-  <a href="#"><img width="100px" height="100px" src="https://github.com/AnAgTeam/AniAnglia/raw/master/repo/app_icon.jpg"></a>
+  <a href="#"><img width="100px" height="100px" src="https://github.com/AniSaturn/AniSaturn/raw/master/repo/app_icon.jpg"></a>
 </p>
 
-<H1 align="center">-==[ Fork of AniAnglia ]==-</H1>
+<H1 align="center">-==[ AniSaturn - Fork of AniAnglia ]==-</H1>
 
 <H2 align="center">-==[ Скачать ]==-</H2>
 <p align="center">
-    <a href="https://github.com/Nionim/AniAnglia/actions">Actions</a> или с 
-    <a href="https://github.com/Nionim/AniAnglia/releases/latest">релизов</a> 
+    <a href="https://github.com/AniSaturn/AniSaturn/actions">Actions</a> или с 
+    <a href="https://github.com/AniSaturn/AniSaturn/releases/latest">релизов</a> 
   <br><br>
   Установка выполняется через TrollStore/Sideloadly и подобные методы.
 </p>
@@ -21,7 +21,7 @@
 <h3>[ GitClone (MacOS only) >>></h3>
 
 ```bash
-git clone https://github.com/AnAgTeam/AniAnglia
+git clone https://github.com/AniSaturn/AniSaturn
 # Дальше просто открыть проект в Xcode и собрать его
 ```
 
