@@ -4,7 +4,7 @@ from pathlib import Path
 from pbxproj import XcodeProject
 
 PROJECT_PATH = "AniSaturn.xcodeproj/project.pbxproj"
-SOURCE_ROOT = "AniSaturn/AniSaturn"   # при необходимости измените
+SOURCE_ROOT = "AniSaturn/"
 
 SOURCE_EXTENSIONS = {'.m', '.mm', '.h', '.c', '.cpp', '.swift', '.strings', '.xib', '.storyboard'}
 RESOURCE_EXTENSIONS = {'.strings', '.xib', '.storyboard', '.xcassets', '.plist', '.png', '.jpg'}
