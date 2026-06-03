@@ -71,7 +71,15 @@ list(APPEND INCLUDE_DIRS ${CURL_TEMP_DIR})
 list(APPEND INCLUDE_DIRS "${LIB_DIR}/include")
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS})
-target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${INCLUDE_DIRS}
+    "${LIB_DIR}/include"
+    "${LIB_DIR}/aateam/libanixart/include"
+    "${LIB_DIR}/aateam/libnetsess/include"
+    "${LIB_DIR}/aateam/libtorrentrepo/include"
+    ${CURL_TEMP_DIR}
+)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     -fobjc-arc
@@ -98,40 +106,30 @@ target_link_libraries(${PROJECT_NAME}
     "-lz"
 )
 
-if(EXISTS "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework/curl")
-    target_link_libraries(${PROJECT_NAME}
-        "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework/curl"
-    )
+set(CURL_FRAMEWORK_PATH "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework")
+if(EXISTS "${CURL_FRAMEWORK_PATH}/curl")
+    target_link_libraries(${PROJECT_NAME} "${CURL_FRAMEWORK_PATH}/curl")
 elseif(EXISTS "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/libcurl.a")
-    target_link_libraries(${PROJECT_NAME}
-        "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/libcurl.a"
-    )
+    target_link_libraries(${PROJECT_NAME} "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/libcurl.a")
 endif()
 
 if(EXISTS "${LIB_DIR}/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
-    target_link_libraries(${PROJECT_NAME}
-        "${LIB_DIR}/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a"
-    )
+    target_link_libraries(${PROJECT_NAME} "${LIB_DIR}/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
 endif()
 
 foreach(boost_lib container json regex system)
-    if(EXISTS "${LIB_DIR}/boost/boost_${boost_lib}.xcframework/ios-arm64/libboost_${boost_lib}.a")
-        target_link_libraries(${PROJECT_NAME}
-            "${LIB_DIR}/boost/boost_${boost_lib}.xcframework/ios-arm64/libboost_${boost_lib}.a"
-        )
+    set(BOOST_LIB_PATH "${LIB_DIR}/boost/boost_${boost_lib}.xcframework/ios-arm64/libboost_${boost_lib}.a")
+    if(EXISTS "${BOOST_LIB_PATH}")
+        target_link_libraries(${PROJECT_NAME} "${BOOST_LIB_PATH}")
     endif()
 endforeach()
 
 if(EXISTS "${LIB_DIR}/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
-    target_link_libraries(${PROJECT_NAME}
-        "${LIB_DIR}/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a"
-    )
+    target_link_libraries(${PROJECT_NAME} "${LIB_DIR}/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
 endif()
 
 if(EXISTS "${LIB_DIR}/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
-    target_link_libraries(${PROJECT_NAME}
-        "${LIB_DIR}/aateam/libanixart.xcframework/ios-arm64/libanixart.a"
-    )
+    target_link_libraries(${PROJECT_NAME} "${LIB_DIR}/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
