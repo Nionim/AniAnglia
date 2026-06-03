@@ -784,8 +784,8 @@
 		EF5F02B02CCE956700EA11BB /* Tools.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Tools.hpp; sourceTree = "<group>"; };
 		EF5F02B12CCE956700EA11BB /* UrlSession.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UrlSession.hpp; sourceTree = "<group>"; };
 		EF5F02B42CCE956700EA11BB /* libanixart.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libanixart.xcframework; sourceTree = "<group>"; };
-		EF5FFDC22CCE88A300EA11BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EF5FFDC42CCE88B100EA11BB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EF5FFDC22CCE88A300EA11BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = language/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EF5FFDC42CCE88B100EA11BB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = language/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EF5FFDD42CCE956700EA11BB /* boost_container.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = boost_container.xcframework; sourceTree = "<group>"; };
 		EF5FFDD52CCE956700EA11BB /* boost_json.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = boost_json.xcframework; sourceTree = "<group>"; };
 		EF5FFDD62CCE956700EA11BB /* boost_regex.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = boost_regex.xcframework; sourceTree = "<group>"; };
