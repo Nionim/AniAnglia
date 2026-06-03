@@ -54,7 +54,7 @@ jobs:
       - name: Locate .app
         id: locate
         run: |
-          APP_PATH=$(find build_derived/Build/Products/Release-iphoneos -name "*.app" -type d | head -n 1)
+          APP_PATH=$(find build/Release-iphoneos -name "*.app" -type d | head -n 1)
           echo "app_path=$APP_PATH" >> $GITHUB_OUTPUT
 
       - name: Package IPA
