@@ -25,6 +25,7 @@ set(RES_DIR       "res")
 set(LANG_DIR      "lang")
 set(ENTITLE_DIR   "ent")
 
+# ==================== Sources ====================
 file(GLOB_RECURSE SOURCES
     "${SRC_DIR}/Auth/*.mm"
     "${SRC_DIR}/Auth/*.m"
@@ -67,19 +68,11 @@ if(EXISTS ${CURL_HEADERS_SRC})
     file(COPY ${CURL_HEADERS_SRC}/ DESTINATION "${CURL_TEMP_DIR}/curl")
 endif()
 list(APPEND INCLUDE_DIRS ${CURL_TEMP_DIR})
-
 list(APPEND INCLUDE_DIRS "${LIB_DIR}/include")
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS})
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${INCLUDE_DIRS}
-    "${LIB_DIR}/include"
-    "${LIB_DIR}/aateam/libanixart/include"
-    "${LIB_DIR}/aateam/libnetsess/include"
-    "${LIB_DIR}/aateam/libtorrentrepo/include"
-    ${CURL_TEMP_DIR}
-)
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     -fobjc-arc
@@ -106,41 +99,48 @@ target_link_libraries(${PROJECT_NAME}
     "-lz"
 )
 
-set(CURL_FRAMEWORK_PATH "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework")
-if(EXISTS "${CURL_FRAMEWORK_PATH}/curl")
-    target_link_libraries(${PROJECT_NAME} "${CURL_FRAMEWORK_PATH}/curl")
-elseif(EXISTS "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/libcurl.a")
-    target_link_libraries(${PROJECT_NAME} "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/libcurl.a")
+set(CURL_FRAMEWORK "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/curl.framework/curl")
+if(EXISTS "${CURL_FRAMEWORK}")
+    target_link_libraries(${PROJECT_NAME} "${CURL_FRAMEWORK}")
+else()
+    set(CURL_STATIC "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/libcurl.a")
+    if(EXISTS "${CURL_STATIC}")
+        target_link_libraries(${PROJECT_NAME} "${CURL_STATIC}")
+    else()
+        message(FATAL_ERROR "curl library not found!")
+    endif()
 endif()
 
-if(EXISTS "${LIB_DIR}/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
-    target_link_libraries(${PROJECT_NAME} "${LIB_DIR}/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
+set(CURLPP_LIB "${CMAKE_SOURCE_DIR}/lib/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
+if(EXISTS "${CURLPP_LIB}")
+    target_link_libraries(${PROJECT_NAME} "${CURLPP_LIB}")
 endif()
 
 foreach(boost_lib container json regex system)
-    set(BOOST_LIB_PATH "${LIB_DIR}/boost/boost_${boost_lib}.xcframework/ios-arm64/libboost_${boost_lib}.a")
-    if(EXISTS "${BOOST_LIB_PATH}")
-        target_link_libraries(${PROJECT_NAME} "${BOOST_LIB_PATH}")
+    set(BOOST_LIB "${CMAKE_SOURCE_DIR}/lib/boost/boost_${boost_lib}.xcframework/ios-arm64/libboost_${boost_lib}.a")
+    if(EXISTS "${BOOST_LIB}")
+        target_link_libraries(${PROJECT_NAME} "${BOOST_LIB}")
     endif()
 endforeach()
 
-if(EXISTS "${LIB_DIR}/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
-    target_link_libraries(${PROJECT_NAME} "${LIB_DIR}/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
+set(NETSESS_LIB "${CMAKE_SOURCE_DIR}/lib/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
+if(EXISTS "${NETSESS_LIB}")
+    target_link_libraries(${PROJECT_NAME} "${NETSESS_LIB}")
 endif()
 
-if(EXISTS "${LIB_DIR}/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
-    target_link_libraries(${PROJECT_NAME} "${LIB_DIR}/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
+set(ANIXART_LIB "${CMAKE_SOURCE_DIR}/lib/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
+if(EXISTS "${ANIXART_LIB}")
+    target_link_libraries(${PROJECT_NAME} "${ANIXART_LIB}")
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_INFO_PLIST "${RES_DIR}/Info.plist"
+    XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
 )
 
 set(ASSET_CATALOG "${RES_DIR}/Assets.xcassets")
 if(EXISTS ${ASSET_CATALOG})
-    set_source_files_properties(${ASSET_CATALOG} PROPERTIES
-        MACOSX_PACKAGE_LOCATION "Resources"
-    )
+    set_source_files_properties(${ASSET_CATALOG} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     target_sources(${PROJECT_NAME} PRIVATE ${ASSET_CATALOG})
 endif()
 
@@ -148,9 +148,7 @@ file(GLOB_RECURSE STRING_FILES "${LANG_DIR}/*.lproj/Localizable.strings")
 foreach(str_file ${STRING_FILES})
     string(REPLACE "${LANG_DIR}/" "" rel_path ${str_file})
     get_filename_component(lproj_dir ${rel_path} DIRECTORY)
-    set_source_files_properties(${str_file} PROPERTIES
-        MACOSX_PACKAGE_LOCATION "Resources/${lproj_dir}"
-    )
+    set_source_files_properties(${str_file} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${lproj_dir}")
     target_sources(${PROJECT_NAME} PRIVATE ${str_file})
 endforeach()
 
@@ -164,16 +162,8 @@ endif()
 set(VER_SHORT "" CACHE STRING "Marketing version")
 set(VER_BUILD "" CACHE STRING "Build number")
 if(VER_SHORT)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        XCODE_ATTRIBUTE_MARKETING_VERSION "${VER_SHORT}"
-    )
+    set_target_properties(${PROJECT_NAME} PROPERTIES XCODE_ATTRIBUTE_MARKETING_VERSION "${VER_SHORT}")
 endif()
 if(VER_BUILD)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        XCODE_ATTRIBUTE_CURRENT_PROJECT_VERSION "${VER_BUILD}"
-    )
+    set_target_properties(${PROJECT_NAME} PROPERTIES XCODE_ATTRIBUTE_CURRENT_PROJECT_VERSION "${VER_BUILD}")
 endif()
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
-)
