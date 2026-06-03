@@ -14,8 +14,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_definitions(
-    -DBOOST_NO_AUTO_PTR
-    -DBOOST_NO_CXX98_FUNCTION_BASE
     -DBOOST_HANA_CONFIG_ENABLE_STRING_UDL=0
     -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
     -DBOOST_VARIANT_USE_RELAXED_GET
@@ -83,6 +81,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     -Wno-deprecated-builtins
     -Wno-deprecated-declarations
     -Wno-unused-function
+    -Wno-unused-variable
     -Wno-unused-private-field
 )
 
