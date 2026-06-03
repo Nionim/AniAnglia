@@ -112,12 +112,12 @@ endforeach()
 set(LIBNETSESS "${CMAKE_SOURCE_DIR}/lib/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
 set(LIBANIXART "${CMAKE_SOURCE_DIR}/lib/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
 
-if(EXISTS "${LIBNETSESS}")
-    target_link_libraries(${PROJECT_NAME} -force_load "${LIBNETSESS}")
-endif()
-
 if(EXISTS "${LIBANIXART}")
     target_link_libraries(${PROJECT_NAME} -force_load "${LIBANIXART}")
+endif()
+
+if(EXISTS "${LIBNETSESS}")
+    target_link_libraries(${PROJECT_NAME} -force_load "${LIBNETSESS}")
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
