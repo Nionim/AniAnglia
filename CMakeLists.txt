@@ -25,23 +25,13 @@ set(RES_DIR       "res")
 set(LANG_DIR      "lang")
 set(ENTITLE_DIR   "ent")
 
-# ==================== Sources ====================
 file(GLOB_RECURSE SOURCES
-    "${SRC_DIR}/Auth/*.mm"
-    "${SRC_DIR}/Auth/*.m"
-    "${SRC_DIR}/Common/**/*.mm"
-    "${SRC_DIR}/Common/**/*.m"
-    "${SRC_DIR}/Common/**/*.c"
-    "${SRC_DIR}/Common/**/*.cpp"
-    "${SRC_DIR}/Core/*.mm"
-    "${SRC_DIR}/Main/**/*.mm"
-    "${SRC_DIR}/Main/**/*.m"
-    "${SRC_DIR}/Misc/**/*.mm"
-    "${SRC_DIR}/Misc/**/*.m"
-    "${SRC_DIR}/Profiles/**/*.mm"
-    "${SRC_DIR}/Profiles/**/*.m"
-    "${SRC_DIR}/Releases/**/*.mm"
-    "${SRC_DIR}/Releases/**/*.m"
+    "${SRC_DIR}/*.mm"
+    "${SRC_DIR}/*.m"
+    "${SRC_DIR}/**/*.mm"
+    "${SRC_DIR}/**/*.m"
+    "${SRC_DIR}/**/*.c"
+    "${SRC_DIR}/**/*.cpp"
 )
 
 file(GLOB_RECURSE HEADERS "${SRC_DIR}/**/*.h" "${SRC_DIR}/**/*.hpp")
@@ -126,7 +116,6 @@ set(LIBANIXART "${CMAKE_SOURCE_DIR}/lib/aateam/libanixart.xcframework/ios-arm64/
 if(EXISTS "${LIBNETSESS}")
     target_link_libraries(${PROJECT_NAME} "${LIBNETSESS}")
 endif()
-
 if(EXISTS "${LIBANIXART}")
     target_link_libraries(${PROJECT_NAME} "${LIBANIXART}")
 endif()
@@ -152,9 +141,7 @@ endforeach()
 
 set(ENTITLEMENTS_FILE "${ENTITLE_DIR}/AniSaturn.entitlements")
 if(EXISTS ${ENTITLEMENTS_FILE})
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${ENTITLEMENTS_FILE}"
-    )
+    set_target_properties(${PROJECT_NAME} PROPERTIES XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${ENTITLEMENTS_FILE}")
 endif()
 
 set(VER_SHORT "" CACHE STRING "Marketing version")
