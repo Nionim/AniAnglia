@@ -35,10 +35,11 @@ jobs:
       - name: Configure with CMake
         run: |
           cmake -G Xcode \
-            -B build \
-            -DCMAKE_SYSTEM_NAME=iOS \
-            -DVER_SHORT="${{ github.event.inputs.version_short }}" \
-            -DVER_BUILD="${{ github.event.inputs.version_build }}"
+          -B build \
+          -DCMAKE_SYSTEM_NAME=iOS \
+          -DVER_SHORT="${{ github.event.inputs.version_short }}" \
+          -DVER_BUILD="${{ github.event.inputs.version_build }}" \
+          -DBUNDLE_ID="${{ github.event.inputs.bundle_id }}"
 
       - name: Build .app
         run: |

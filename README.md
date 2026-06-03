@@ -27,7 +27,7 @@ git clone https://github.com/AniSaturn/AniSaturn
 
 # PROJECT_VERSION замените на требуемую вам версию
 # PROJECT_BUILD - Аналогично
-cmake -G Xcode -B build -DCMAKE_SYSTEM_NAME=iOS -DVER_SHORT="PROJECT_VERSION" -DVER_BUILD="PROJECT_BUILD"
+cmake -G Xcode -B build -DCMAKE_SYSTEM_NAME=iOS -DVER_SHORT="PROJECT_VERSION" -DVER_BUILD="PROJECT_BUILD" -DBUNDLE_ID="delta.cion.anisaturn"
 
 # Тут ничего менять не надо, но можете покопаться при желании
 xcodebuild -project build/AniSaturn.xcodeproj -scheme AniSaturn \
