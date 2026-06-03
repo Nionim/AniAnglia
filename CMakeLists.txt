@@ -13,6 +13,14 @@ set(CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_definitions(
+    -DBOOST_NO_AUTO_PTR
+    -DBOOST_NO_CXX98_FUNCTION_BASE
+    -DBOOST_HANA_CONFIG_ENABLE_STRING_UDL=0
+    -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+    -DBOOST_VARIANT_USE_RELAXED_GET
+)
+
 set(SRC_DIR       "src")
 set(LIB_DIR       "lib")
 set(RES_DIR       "res")
@@ -37,69 +45,45 @@ file(GLOB_RECURSE SOURCES
     "${SRC_DIR}/Releases/**/*.m"
 )
 
-file(GLOB_RECURSE HEADERS
-    "${SRC_DIR}/**/*.h"
-    "${SRC_DIR}/**/*.hpp"
-)
+file(GLOB_RECURSE HEADERS "${SRC_DIR}/**/*.h" "${SRC_DIR}/**/*.hpp")
 
-set(CURL_TEMP_DIR "${CMAKE_BINARY_DIR}/curl_headers")
-file(MAKE_DIRECTORY ${CURL_TEMP_DIR})
-file(MAKE_DIRECTORY "${CURL_TEMP_DIR}/curl")
-
-set(CURL_HEADERS_SRC "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework/Headers")
-if(EXISTS ${CURL_HEADERS_SRC})
-    file(COPY ${CURL_HEADERS_SRC}/ DESTINATION "${CURL_TEMP_DIR}/curl")
-endif()
+set(INCLUDE_DIRS "${SRC_DIR}")
 
 file(GLOB_RECURSE SRC_SUBDIRS LIST_DIRECTORIES true "${SRC_DIR}/*")
-set(INCLUDE_DIRS "${SRC_DIR}")
 foreach(DIR ${SRC_SUBDIRS})
     if(IS_DIRECTORY ${DIR})
         list(APPEND INCLUDE_DIRS ${DIR})
     endif()
 endforeach()
 
-file(GLOB_RECURSE INCLUDE_CANDIDATES
-    "${LIB_DIR}/include"
-    "${LIB_DIR}/Headers"
-    "${LIB_DIR}/*/include"
-    "${LIB_DIR}/*/Headers"
-    "${LIB_DIR}/*.framework/Headers"
-    "${LIB_DIR}/*.xcframework/*/include"
-    "${LIB_DIR}/*.xcframework/*/Headers"
-    "${LIB_DIR}/*.xcframework/*/*.framework/Headers"
-)
-foreach(INC ${INCLUDE_CANDIDATES})
-    if(IS_DIRECTORY ${INC})
-        list(APPEND INCLUDE_DIRS ${INC})
-    endif()
-endforeach()
-
-file(GLOB_RECURSE ALL_HEADERS "${LIB_DIR}/*.h" "${LIB_DIR}/*.hpp")
-foreach(HEADER ${ALL_HEADERS})
-    get_filename_component(HEADER_DIR ${HEADER} DIRECTORY)
-    list(APPEND INCLUDE_DIRS ${HEADER_DIR})
-endforeach()
-list(REMOVE_DUPLICATES INCLUDE_DIRS)
-
-add_executable(${PROJECT_NAME} MACOSX_BUNDLE
-    ${SOURCES}
-    ${HEADERS}
-)
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${INCLUDE_DIRS}
-    "${LIB_DIR}/include"
+list(APPEND INCLUDE_DIRS
     "${LIB_DIR}/aateam/libanixart/include"
     "${LIB_DIR}/aateam/libnetsess/include"
     "${LIB_DIR}/aateam/libtorrentrepo/include"
-    ${CURL_TEMP_DIR}
 )
+
+set(CURL_TEMP_DIR "${CMAKE_BINARY_DIR}/curl_headers")
+file(MAKE_DIRECTORY ${CURL_TEMP_DIR}/curl)
+set(CURL_HEADERS_SRC "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework/Headers")
+if(EXISTS ${CURL_HEADERS_SRC})
+    file(COPY ${CURL_HEADERS_SRC}/ DESTINATION "${CURL_TEMP_DIR}/curl")
+endif()
+list(APPEND INCLUDE_DIRS ${CURL_TEMP_DIR})
+
+list(APPEND INCLUDE_DIRS "${LIB_DIR}/include")
+
+add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     -fobjc-arc
     -Wall
-    -F${LIB_DIR}/curlpp/curl.xcframework/ios-arm64
+    -Wno-unknown-pragmas
+    -Wno-explicit-specialization-storage-class
+    -Wno-deprecated-builtins
+    -Wno-deprecated-declarations
+    -Wno-unused-function
+    -Wno-unused-private-field
 )
 
 target_link_libraries(${PROJECT_NAME}
