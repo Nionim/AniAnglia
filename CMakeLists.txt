@@ -117,6 +117,7 @@ target_link_libraries(${PROJECT_NAME}
     "-framework UIKit"
     "-framework Foundation"
     "-framework CoreGraphics"
+    "-framework QuartzCore"
     "-framework AVFoundation"
     "-framework AVKit"
     "-framework MediaPlayer"
