@@ -84,10 +84,14 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     "${LIB_DIR}/aateam/libanixart/include"
     "${LIB_DIR}/aateam/libnetsess/include"
     "${LIB_DIR}/aateam/libtorrentrepo/include"
-    "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework/Headers"
 )
 
-# ---- Линковка библиотек ----
+target_compile_options(${PROJECT_NAME} PRIVATE
+    -fobjc-arc
+    -Wall
+    -F${LIB_DIR}/curlpp/curl.xcframework/ios-arm64
+)
+
 target_link_libraries(${PROJECT_NAME}
     "-framework UIKit"
     "-framework Foundation"
@@ -136,11 +140,6 @@ if(EXISTS "${LIB_DIR}/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
         "${LIB_DIR}/aateam/libanixart.xcframework/ios-arm64/libanixart.a"
     )
 endif()
-
-target_compile_options(${PROJECT_NAME} PRIVATE
-    -fobjc-arc
-    -Wall
-)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_INFO_PLIST "${RES_DIR}/Info.plist"
