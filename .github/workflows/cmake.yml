@@ -1,0 +1,71 @@
+name: CMake build
+
+on:
+  workflow_dispatch:
+      inputs:
+        version_short:
+          description: 'Version'
+          required: true
+          default: 'v0.0.0-dev'
+          type: string
+        version_build:
+          description: 'Build number'
+          required: true
+          default: '1'
+          type: string
+        bundle_id:
+          description: 'Group'
+          required: true
+          type: choice
+          options:
+            - 'delta.cion.anisaturn'
+            - 'delta.cion.anisaturnbeta'
+          default: 'delta.cion.anisaturnbeta'
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install CMake
+        run: brew install cmake
+
+      - name: Configure with CMake
+        run: |
+          cmake -G Xcode \
+            -B build \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DVER_SHORT="${{ github.event.inputs.version_short }}" \
+            -DVER_BUILD="${{ github.event.inputs.version_build }}"
+
+      - name: Build .app
+        run: |
+          xcodebuild -project build/AniSaturn.xcodeproj \
+            -scheme AniSaturn \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build_derived \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            PRODUCT_BUNDLE_IDENTIFIER="${{ github.event.inputs.bundle_id }}"
+
+      - name: Locate .app
+        id: locate
+        run: |
+          APP_PATH=$(find build_derived/Build/Products/Release-iphoneos -name "*.app" -type d | head -n 1)
+          echo "app_path=$APP_PATH" >> $GITHUB_OUTPUT
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -R "${{ steps.locate.outputs.app_path }}" Payload/
+          zip -r AniSaturn.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: AniSaturn.ipa
+          path: AniSaturn.ipa
+          retention-days: 7

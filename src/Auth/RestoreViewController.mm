@@ -1,0 +1,330 @@
+//
+//  RestoreViewController.m
+//  iOSAnixart
+//
+//  Created by Toilettrauma on 22.08.2024.
+//
+
+#import <Foundation/Foundation.h>
+#import "RestoreViewController.h"
+#import "TextErrorField.h"
+#import "AppColor.h"
+#import "CodeEnterViewController.h"
+#import "LibanixartApi.h"
+#import "StringCvt.h"
+#import "AuthPerformer.h"
+
+@interface RestoreViewController () <CodeEnterViewControllerDelegate> {
+    anixart::ApiRestorePending::UPtr _pending_restore;
+}
+@property(nonatomic, strong) LibanixartApi* api_proxy;
+@property(nonatomic, retain) TextErrorField* login_view;
+@property(nonatomic, retain) UITextField* login_field;
+@property(nonatomic, retain) TextErrorField* password_view;
+@property(nonatomic, retain) UITextField* password_field;
+@property(nonatomic, retain) TextErrorField* password_re_view;
+@property(nonatomic, retain) UITextField* password_re_field;
+@property(nonatomic, retain) UIButton* restore_button;
+@property(nonatomic, retain) UIActivityIndicatorView* activity_indicator_view;
+@end
+
+@implementation RestoreViewController
+
+-(instancetype)init {
+    self = [super init];
+    
+    _api_proxy = [LibanixartApi sharedInstance];
+    
+    return self;
+}
+
+-(void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self setup];
+    [self setupLayout];
+}
+
+-(void)setup {
+    _login_view = [TextErrorField new];
+    _login_field = _login_view.field;
+    _login_field.keyboardType = UIKeyboardTypeDefault;
+    _login_field.placeholder = NSLocalizedString(@"app.auth.username", "");
+    _login_field.autocorrectionType = UITextAutocorrectionTypeNo;
+    _login_field.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    _login_field.returnKeyType = UIReturnKeyDone;
+    _login_field.clearButtonMode = UITextFieldViewModeWhileEditing;
+    _login_field.textAlignment = NSTextAlignmentCenter;
+    _login_field.borderStyle = UITextBorderStyleNone;
+    _login_field.layer.cornerRadius = 8.0;
+    _login_field.layer.borderWidth = 0.8;
+    [_login_field setDelegate:self];
+    
+    _password_view = [TextErrorField new];
+    _password_field = _password_view.field;
+    _password_field.keyboardType = UIKeyboardTypeDefault;
+    _password_field.placeholder = NSLocalizedString(@"app.auth.password", "");
+    _password_field.autocorrectionType = UITextAutocorrectionTypeNo;
+    _password_field.returnKeyType = UIReturnKeyDone;
+    _password_field.clearButtonMode = UITextFieldViewModeWhileEditing;
+    _password_field.textAlignment = NSTextAlignmentCenter;
+    _password_field.borderStyle = UITextBorderStyleNone;
+    _password_field.layer.cornerRadius = 8.0;
+    _password_field.layer.borderWidth = 0.8;
+    _password_field.secureTextEntry = YES;
+    [_password_field setDelegate:self];
+    
+    _password_re_view = [TextErrorField new];
+    _password_re_field = _password_re_view.field;
+    _password_re_field.keyboardType = UIKeyboardTypeDefault;
+    _password_re_field.placeholder = NSLocalizedString(@"app.auth.password_re", "");
+    _password_re_field.autocorrectionType = UITextAutocorrectionTypeNo;
+    _password_re_field.returnKeyType = UIReturnKeyDone;
+    _password_re_field.clearButtonMode = UITextFieldViewModeWhileEditing;
+    _password_re_field.textAlignment = NSTextAlignmentCenter;
+    _password_re_field.borderStyle = UITextBorderStyleNone;
+    _password_re_field.layer.cornerRadius = 8.0;
+    _password_re_field.layer.borderWidth = 0.8;
+    _password_re_field.secureTextEntry = YES;
+    [_password_re_field setDelegate:self];
+    
+    _restore_button = [UIButton new];
+    [_restore_button setTitle:NSLocalizedString(@"app.restore.confirm", "") forState:UIControlStateNormal];
+    _restore_button.layer.cornerRadius = 8.0;
+    [_restore_button addTarget:self action:@selector(restoreButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _activity_indicator_view = [UIActivityIndicatorView new];
+    
+    [self.view addSubview:_login_view];
+    [self.view addSubview:_password_view];
+    [self.view addSubview:_password_re_view];
+    [self.view addSubview:_restore_button];
+    [self.view addSubview:_activity_indicator_view];
+    
+    _login_view.translatesAutoresizingMaskIntoConstraints = NO;
+    _password_view.translatesAutoresizingMaskIntoConstraints = NO;
+    _password_re_view.translatesAutoresizingMaskIntoConstraints = NO;
+    _restore_button.translatesAutoresizingMaskIntoConstraints = NO;
+    _activity_indicator_view.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [_login_view.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20],
+        [_login_view.heightAnchor constraintEqualToConstant:80.0],
+        [NSLayoutConstraint constraintWithItem:_login_view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:0.34 constant:0],
+        [_login_view.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:10.0],
+        
+        [_password_view.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20.0],
+        [_password_view.heightAnchor constraintEqualToConstant:80.0],
+        [_password_view.topAnchor constraintEqualToAnchor:_login_view.bottomAnchor constant:5.0],
+        [_password_view.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:10.0],
+        
+        [_password_re_view.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20.0],
+        [_password_re_view.heightAnchor constraintEqualToConstant:80.0],
+        [_password_re_view.topAnchor constraintEqualToAnchor:_password_view.bottomAnchor constant:5.0],
+        [_password_re_view.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:10.0],
+        
+        [_restore_button.widthAnchor constraintEqualToAnchor:self.view.widthAnchor constant:-20],
+        [_restore_button.heightAnchor constraintEqualToConstant:50],
+        [_restore_button.topAnchor constraintEqualToAnchor:_password_re_view.bottomAnchor constant:15.0],
+        [_restore_button.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:10.0],
+        
+        [_activity_indicator_view.centerYAnchor constraintEqualToAnchor:_restore_button.centerYAnchor],
+        [_activity_indicator_view.trailingAnchor constraintEqualToAnchor:_restore_button.layoutMarginsGuide.trailingAnchor]
+    ]];
+}
+
+-(void)setupLayout {
+    self.view.backgroundColor = [AppColorProvider backgroundColor];
+    _login_field.textColor = [AppColorProvider textShyColor];
+    _login_field.backgroundColor = [AppColorProvider foregroundColor1];
+    _password_field.textColor = [AppColorProvider textShyColor];
+    _password_field.backgroundColor = [AppColorProvider foregroundColor1];
+    _password_re_field.textColor = [AppColorProvider textShyColor];
+    _password_re_field.backgroundColor = [AppColorProvider foregroundColor1];
+    _restore_button.backgroundColor = [AppColorProvider primaryColor];
+}
+
+-(BOOL)checkFieldAndShowError:(UITextField*)text_field {
+    // check for empty
+    if ([text_field.text length] == 0) {
+        if (text_field == _login_field) {
+            [_login_view showError:NSLocalizedString(@"app.auth.username.error.empty", "")];
+        }
+        else if (text_field == _password_field) {
+            [_password_view showError:NSLocalizedString(@"app.auth.password.error.empty", "")];
+        }
+        else if (text_field == _password_re_field) {
+            [_password_re_view showError:NSLocalizedString(@"app.auth.password.error.empty", "")];
+        }
+        return NO;
+    }
+    // check for not equal
+    else if (text_field == _password_re_field) {
+        if (![_password_field.text isEqualToString:_password_re_field.text]) {
+            [_password_re_view showError:NSLocalizedString(@"app.auth.password.error.not_equal", "")];
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)text_field {
+    if (text_field == _login_field) {
+        [_login_view clearError];
+    }
+    else if (text_field == _password_field) {
+        [_password_view clearError];
+    }
+    else if (text_field == _password_re_field) {
+        [_password_re_view clearError];
+    }
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)text_field reason:(UITextFieldDidEndEditingReason)reason {
+    [self checkFieldAndShowError:text_field];
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)text_field {
+    [text_field resignFirstResponder];
+    return NO;
+}
+
+-(IBAction)restoreButtonTapped:(id)sender {
+    if (![self checkFieldAndShowError:_login_field] ||
+        ![self checkFieldAndShowError:_password_field] ||
+        ![self checkFieldAndShowError:_password_re_field]) {
+        return;
+    }
+    using anixart::codes::auth::RestoreCode;
+    
+    std::string login = TO_STDSTRING(_login_field.text);
+    std::string password = TO_STDSTRING(_password_field.text);
+    
+    __block RestoreCode error_code = RestoreCode::Success;
+    
+    [_activity_indicator_view startAnimating];
+    [_api_proxy asyncCall:^BOOL(anixart::Api* api) {
+        try {
+            self->_pending_restore = api->auth().restore(login, password);
+        } catch (const anixart::RestoreError& e) {
+            error_code = e.code;
+            return YES;
+        }
+        return NO;
+    } completion:^(BOOL errored) {
+        [self->_activity_indicator_view stopAnimating];
+        if (!errored || error_code == RestoreCode::CodeAlreadySent) {
+            CodeEnterViewController* view_controller = [CodeEnterViewController new];
+            view_controller.delegate = self;
+            if (error_code == RestoreCode::CodeAlreadySent) {
+                [view_controller showCodeError:NSLocalizedString(@"app.auth.error.code_already_sent", "")];
+            }
+            [self.navigationController pushViewController:view_controller animated:YES];
+            return;
+        }
+        
+        if (error_code == RestoreCode::ProfileNotFound) {
+            [self->_login_view showError:NSLocalizedString(@"app.auth.username.error.not_found", "")];
+            return;
+        }
+        
+        NSString* error_msg = nil;
+        switch (error_code) {
+            case RestoreCode::CodeCannotSend:
+                error_msg = NSLocalizedString(@"app.auth.error.cannot_send_code", "");
+                break;
+            default:
+                error_msg = NSLocalizedString(@"app.auth.error.unknown", "");
+                break;
+        }
+        
+        UIAlertController* alert_controller = [UIAlertController alertControllerWithTitle:error_msg message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        [alert_controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"app.auth.action_ok", "") style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+            
+        }]];
+        [self presentViewController:alert_controller animated:YES completion:nil];
+    }];
+}
+
+-(void)didResendForCodeEnterViewController:(CodeEnterViewController*)view_contoroller completionHandler:(void(^)(BOOL errored))completion_handler{
+    using anixart::codes::auth::RestoreResendCode;
+    
+    __block RestoreResendCode error_code = RestoreResendCode::Success;
+    
+    [_api_proxy asyncCall:^BOOL(anixart::Api* api) {
+        try {
+            self->_pending_restore->resend();
+        } catch (const anixart::RestoreResendError& e) {
+            error_code = e.code;
+            return YES;
+        }
+        return NO;
+    } completion:^(BOOL errored) {
+        completion_handler(errored);
+        if (!errored) {
+            return;
+        }
+        
+        NSString* error_msg = nil;
+        switch (error_code) {
+            case RestoreResendCode::CodeCannotSend:
+                error_msg = NSLocalizedString(@"app.auth.error.cannot_send_code", "");
+                break;
+            default:
+                error_msg = NSLocalizedString(@"app.auth.error.unknown", "");
+                break;
+        }
+        
+        [view_contoroller showCodeError:error_msg];
+    }];
+}
+
+-(void)codeEnterViewController:(CodeEnterViewController*)view_contoroller didSubmitedCode:(NSString*)code completionHandler:(void(^)(BOOL errored))completion_handler{
+    using anixart::codes::auth::RestoreVerifyCode;
+    
+    std::string restore_code = TO_STDSTRING(code);
+    __block anixart::Profile::Ptr profile;
+    __block anixart::ProfileToken profile_token;
+    __block RestoreVerifyCode error_code = RestoreVerifyCode::Success;
+    
+    [_api_proxy asyncCall:^BOOL(anixart::Api* api) {
+        try {
+            auto result = self->_pending_restore->verify(restore_code);
+            profile = std::move(result.first);
+            profile_token = std::move(result.second);
+        } catch (const anixart::RestoreVerifyError& e) {
+            error_code = e.code;
+            return YES;
+        }
+        return NO;
+    } completion:^(BOOL errored) {
+        completion_handler(errored);
+        if (!errored) {
+            [AuthPerformer performAuthWithProfile:std::move(profile) profileToken:std::move(profile_token)];
+            return;
+        }
+        
+        NSString* error_msg = nil;
+        switch (error_code) {
+            case RestoreVerifyCode::CodeExpired:
+                error_msg = NSLocalizedString(@"app.auth.error.code_expired", "");
+                break;
+            case RestoreVerifyCode::CodeInvalid:
+                error_msg = NSLocalizedString(@"app.auth.error.code_invalid", "");
+                break;
+            default:
+                error_msg = NSLocalizedString(@"app.auth.error.unknown", "");
+                break;
+        }
+        
+        UIAlertController* alert_controller = [UIAlertController alertControllerWithTitle:error_msg message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        [alert_controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"app.auth.action_ok", "") style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+            
+        }]];
+        [self presentViewController:alert_controller animated:YES completion:nil];
+    }];
+}
+
+@end
+
+
