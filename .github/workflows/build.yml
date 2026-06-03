@@ -6,13 +6,21 @@ on:
         version_short:
           description: 'Version'
           required: true
-          default: 'v1.0.0-alpha'
+          default: 'v0.0.0-dev'
           type: string
         version_build:
           description: 'Build number'
           required: true
           default: '1'
           type: string
+        bundle_id:
+          description: 'Group'
+          required: true
+          type: choice
+          options:
+            - 'delta.cion.anisaturn'
+            - 'delta.cion.anisaturnbeta'
+          default: 'delta.cion.anisaturnbeta'
 
 jobs:
   build:
@@ -36,7 +44,8 @@ jobs:
             ONLY_ACTIVE_ARCH=NO \
             BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
             MARKETING_VERSION="${{ github.event.inputs.version_short }}" \
-            CURRENT_PROJECT_VERSION="${{ github.event.inputs.version_build }}"
+            CURRENT_PROJECT_VERSION="${{ github.event.inputs.version_build }}" \
+            PRODUCT_BUNDLE_IDENTIFIER="${{ github.event.inputs.bundle_id }}"
 
       - name: Locate .app bundle
         id: locate_app
