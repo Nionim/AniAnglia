@@ -2,3 +2,7 @@ xcuserdata/
 /AniSaturn/Libraries/libtorrent/libtorrent.xcframework/ios-arm64/torrent-rasterbar.a
 /AniSaturn/Libraries/libtorrent/libtorrent.xcframework/ios-arm64_x86_64-simulator/torrent-rasterbar.a
 .DS_Store
+
+
+tekila.py
+tekila.txt

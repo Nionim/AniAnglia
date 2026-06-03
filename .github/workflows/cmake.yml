@@ -35,10 +35,11 @@ jobs:
       - name: Configure with CMake
         run: |
           cmake -G Xcode \
-            -B build \
-            -DCMAKE_SYSTEM_NAME=iOS \
-            -DVER_SHORT="${{ github.event.inputs.version_short }}" \
-            -DVER_BUILD="${{ github.event.inputs.version_build }}"
+          -B build \
+          -DCMAKE_SYSTEM_NAME=iOS \
+          -DVER_SHORT="${{ github.event.inputs.version_short }}" \
+          -DVER_BUILD="${{ github.event.inputs.version_build }}" \
+          -DBUNDLE_ID="${{ github.event.inputs.bundle_id }}"
 
       - name: Build .app
         run: |
@@ -54,7 +55,7 @@ jobs:
       - name: Locate .app
         id: locate
         run: |
-          APP_PATH=$(find build_derived/Build/Products/Release-iphoneos -name "*.app" -type d | head -n 1)
+          APP_PATH=$(find build/Release-iphoneos -name "*.app" -type d | head -n 1)
           echo "app_path=$APP_PATH" >> $GITHUB_OUTPUT
 
       - name: Package IPA

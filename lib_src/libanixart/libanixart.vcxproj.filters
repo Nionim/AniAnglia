@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{d8f2a265-48cc-4db5-804b-ca9c6196075e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public">
+      <UniqueIdentifier>{7e7d3dcd-08d5-495b-bd74-62f474857269}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parsers">
+      <UniqueIdentifier>{f39e306a-357c-4aa0-bffb-a05f89cd4b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{d0bbbc19-c355-416b-b48e-e4104d073dbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{48264e3e-7f35-4a4c-979b-afb37ab45bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Types">
+      <UniqueIdentifier>{793ec96c-105b-449c-800b-2b1289594a75}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\LibriaParser.cpp">
+      <Filter>Parsers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parser.cpp">
+      <Filter>Parsers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parsers.cpp">
+      <Filter>Parsers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KodikParser.cpp">
+      <Filter>Parsers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiSearch.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Api.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiAuth.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiEpisodes.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiProfiles.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiReleases.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiErrors.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiRequests.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiSession.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiTypes.cpp">
+      <Filter>Public\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiRequestTypes.cpp">
+      <Filter>Public\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiPageableRequests.cpp">
+      <Filter>Public\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CachingJson.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiRequestsAuth.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiArticles.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ApiCollections.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Escaping.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\iOSPlatform.mm">
+      <Filter>Misc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\anixart\ApiSearch.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Api.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiAuth.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiEpisodes.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiProfiles.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiReleases.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiErrorCodes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiErrors.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiPageable.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiRequests.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\LibriaParser.hpp">
+      <Filter>Parsers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Parser.hpp">
+      <Filter>Parsers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Parsers.hpp">
+      <Filter>Parsers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\KodikParser.hpp">
+      <Filter>Parsers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Platform.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\StrongTypedef.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Version.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiSession.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiTypes.hpp">
+      <Filter>Public\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiRequestTypes.hpp">
+      <Filter>Public\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiPageableRequests.hpp">
+      <Filter>Public\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\CachingJson.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiRequestsAuth.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiRequestsCoreTypes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Variant.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Serializable.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\MacroDefs.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiArticles.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\ApiCollections.hpp">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Random.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anixart\Escaping.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

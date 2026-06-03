@@ -21,10 +21,23 @@
 <h3>[ GitClone (MacOS only) >>></h3>
 
 ```bash
+# UPD: В новейших версиях проект был перенесет на Cmake.
+# UPD: Сбилдить его полностью через Xcode теперь нельзя. 
 git clone https://github.com/AniSaturn/AniSaturn
-# Дальше просто открыть проект в Xcode и собрать его
-# В теории можно и через консоль конечно, но это слишком длинная команда
-# Хотя если вам нужно - Гляньте команду в .github/workflows/build.yml
+
+# PROJECT_VERSION замените на требуемую вам версию
+# PROJECT_BUILD - Аналогично
+cmake -G Xcode -B build -DCMAKE_SYSTEM_NAME=iOS -DVER_SHORT="PROJECT_VERSION" -DVER_BUILD="PROJECT_BUILD" -DBUNDLE_ID="delta.cion.anisaturn"
+
+# Тут ничего менять не надо, но можете покопаться при желании
+xcodebuild -project build/AniSaturn.xcodeproj -scheme AniSaturn \
+  -configuration Release \
+  -sdk iphoneos -derivedDataPath build_derived \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+  PRODUCT_BUNDLE_IDENTIFIER="delta.cion.anisaturn"
+
+# Некоторые либы (libanixart и libnetsess) не были загружены по причине АП
+# Если автор оригинала разешил - Я выложу либы полностью.
 ```
 
 ## TODO

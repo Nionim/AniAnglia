@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{adc1faa2-8da8-4625-bc97-6f28e9e707d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{87c60cc1-c5a1-4e4e-aac2-51ceb9710f91}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\netsess\StringTools.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\netsess\TimeTools.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\netsess\JsonTools.hpp">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="include\netsess\NetTypes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\netsess\UrlSession.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\netsess\UtilConcepts.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\StringTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimeTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JsonTools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UrlSession.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NetTypes.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
