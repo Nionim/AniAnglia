@@ -1,4 +1,4 @@
-name: Build iOS App
+name: CMake build
 
 on:
   workflow_dispatch:
@@ -26,47 +26,45 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Select Xcode version
-        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      - name: Install CMake
+        run: brew install cmake
 
-      - name: Build project
+      - name: Configure with CMake
         run: |
-          xcodebuild -project AniSaturn.xcodeproj \
+          cmake -G Xcode \
+          -B build \
+          -DCMAKE_SYSTEM_NAME=iOS \
+          -DVER_SHORT="${{ github.event.inputs.version_short }}" \
+          -DVER_BUILD="${{ github.event.inputs.version_build }}" \
+          -DBUNDLE_ID="${{ github.event.inputs.bundle_id }}"
+
+      - name: Build .app
+        run: |
+          xcodebuild -project build/AniSaturn.xcodeproj \
             -scheme AniSaturn \
             -configuration Release \
             -sdk iphoneos \
-            -derivedDataPath build \
+            -derivedDataPath build_derived \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            ONLY_ACTIVE_ARCH=NO \
-            BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-            MARKETING_VERSION="${{ github.event.inputs.version_short }}" \
-            CURRENT_PROJECT_VERSION="${{ github.event.inputs.version_build }}" \
             PRODUCT_BUNDLE_IDENTIFIER="${{ github.event.inputs.bundle_id }}"
 
-      - name: Locate .app bundle
-        id: locate_app
+      - name: Locate .app
+        id: locate
         run: |
-          APP_PATH=$(find build/Build/Products/Release-iphoneos -name "*.app" -type d | head -n 1)
-          if [ -z "$APP_PATH" ]; then
-            echo "Error: .app bundle not found"
-            exit 1
-          fi
+          APP_PATH=$(find build/Release-iphoneos -name "*.app" -type d | head -n 1)
           echo "app_path=$APP_PATH" >> $GITHUB_OUTPUT
-          echo "Found app at: $APP_PATH"
 
-      - name: Create Payload and package IPA
+      - name: Package IPA
         run: |
-          APP_PATH="${{ steps.locate_app.outputs.app_path }}"
           mkdir -p Payload
-          cp -R "$APP_PATH" Payload/
+          cp -R "${{ steps.locate.outputs.app_path }}" Payload/
           zip -r AniSaturn.ipa Payload
-          rm -rf Payload
 
-      - name: Upload IPA artifact
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
           name: AniSaturn.ipa
