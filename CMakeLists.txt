@@ -55,6 +55,14 @@ foreach(DIR ${SRC_DIRS})
     endif()
 endforeach()
 
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${INCLUDE_DIRS}
+    "${LIB_DIR}/include"
+    "${LIB_DIR}/aateam/libanixart/include"
+    "${LIB_DIR}/aateam/libtorrentrepo/include"
+    "${LIB_DIR}/aateam/libnetsess/include"
+)
+
 target_link_libraries(${PROJECT_NAME}
     "-framework UIKit"
     "-framework Foundation"
@@ -91,12 +99,6 @@ foreach(boost_lib container json regex system)
         )
     endif()
 endforeach()
-
-#if(EXISTS "${LIB_DIR}/libtorrent/try_signal.xcframework/ios-arm64/libtry_signal.a")
-#    target_link_libraries(${PROJECT_NAME}
-#        "${LIB_DIR}/libtorrent/try_signal.xcframework/ios-arm64/libtry_signal.a"
-#    )
-#endif()
 
 if(EXISTS "${LIB_DIR}/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
     target_link_libraries(${PROJECT_NAME}
