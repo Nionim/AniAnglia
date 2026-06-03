@@ -137,6 +137,27 @@ namespace network::json {
             json_str += ",";
         }
 
+        template<typename Value, typename Serializator>
+            requires requires (Value val, Serializator s) {
+                { s(val) } -> std::convertible_to<std::string>;
+            }
+        static void append(std::string& json_str, std::string_view key, Value&& value, Serializator&& serializator) {
+            json_str += '"';
+            json_str += key;
+            json_str += R"(":)";
+            json_str += serializator(std::forward<Value>(value));
+            json_str += ",";
+        }
+
+        template<typename Value, typename Serializator>
+            requires requires (Value val, Serializator s) {
+                { s(val) } -> std::convertible_to<std::string>;
+            }
+        static void append(std::string& json_str, Value&& value, Serializator&& serializator) {
+            json_str += serializator(std::forward<Value>(value));
+            json_str += ",";
+        }
+        
         template<typename T>
             requires serializable_to_json_array<std::remove_cvref_t<T>>
         static std::string serialize(T&& arr) {
