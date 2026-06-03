@@ -65,7 +65,6 @@ file(GLOB_RECURSE INCLUDE_CANDIDATES
     "${LIB_DIR}/*.xcframework/*/Headers"
     "${LIB_DIR}/*.xcframework/*/*.framework/Headers"
 )
-
 foreach(INC ${INCLUDE_CANDIDATES})
     if(IS_DIRECTORY ${INC})
         list(APPEND INCLUDE_DIRS ${INC})
@@ -81,8 +80,14 @@ list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${INCLUDE_DIRS}
+    "${LIB_DIR}/include"
+    "${LIB_DIR}/aateam/libanixart/include"
+    "${LIB_DIR}/aateam/libnetsess/include"
+    "${LIB_DIR}/aateam/libtorrentrepo/include"
+    "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework/Headers"
 )
 
+# ---- Линковка библиотек ----
 target_link_libraries(${PROJECT_NAME}
     "-framework UIKit"
     "-framework Foundation"
