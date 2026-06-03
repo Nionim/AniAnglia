@@ -42,10 +42,14 @@ file(GLOB_RECURSE HEADERS
     "${SRC_DIR}/**/*.hpp"
 )
 
-add_executable(${PROJECT_NAME} MACOSX_BUNDLE
-    ${SOURCES}
-    ${HEADERS}
-)
+set(CURL_TEMP_DIR "${CMAKE_BINARY_DIR}/curl_headers")
+file(MAKE_DIRECTORY ${CURL_TEMP_DIR})
+file(MAKE_DIRECTORY "${CURL_TEMP_DIR}/curl")
+
+set(CURL_HEADERS_SRC "${LIB_DIR}/curlpp/curl.xcframework/ios-arm64/curl.framework/Headers")
+if(EXISTS ${CURL_HEADERS_SRC})
+    file(COPY ${CURL_HEADERS_SRC}/ DESTINATION "${CURL_TEMP_DIR}/curl")
+endif()
 
 file(GLOB_RECURSE SRC_SUBDIRS LIST_DIRECTORIES true "${SRC_DIR}/*")
 set(INCLUDE_DIRS "${SRC_DIR}")
@@ -78,12 +82,18 @@ foreach(HEADER ${ALL_HEADERS})
 endforeach()
 list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
+add_executable(${PROJECT_NAME} MACOSX_BUNDLE
+    ${SOURCES}
+    ${HEADERS}
+)
+
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${INCLUDE_DIRS}
     "${LIB_DIR}/include"
     "${LIB_DIR}/aateam/libanixart/include"
     "${LIB_DIR}/aateam/libnetsess/include"
     "${LIB_DIR}/aateam/libtorrentrepo/include"
+    ${CURL_TEMP_DIR}
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
