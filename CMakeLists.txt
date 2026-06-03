@@ -13,17 +13,24 @@ set(CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_definitions(
-    -DBOOST_HANA_CONFIG_ENABLE_STRING_UDL=0
-    -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-    -DBOOST_VARIANT_USE_RELAXED_GET
-)
 
 set(SRC_DIR       "src")
 set(LIB_DIR       "lib")
 set(RES_DIR       "res")
 set(LANG_DIR      "lang")
 set(ENTITLE_DIR   "ent")
+set(LIB_SRC       "lib_src")
+
+add_subdirectory(${LIB_SRC}/libnetsess)
+add_subdirectory(${LIB_SRC}/libanixart)
+
+target_link_libraries(anixart netsess)
+
+add_definitions(
+    -DBOOST_HANA_CONFIG_ENABLE_STRING_UDL=0
+    -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+    -DBOOST_VARIANT_USE_RELAXED_GET
+)
 
 file(GLOB_RECURSE SOURCES
     "${SRC_DIR}/**/*.mm"
@@ -45,7 +52,6 @@ endforeach()
 list(APPEND INCLUDE_DIRS
     "${LIB_DIR}/aateam/libanixart/include"
     "${LIB_DIR}/aateam/libnetsess/include"
-    "${LIB_DIR}/aateam/libtorrentrepo/include"
 )
 
 set(CURL_TEMP_DIR "${CMAKE_BINARY_DIR}/curl_headers")
@@ -59,12 +65,14 @@ list(APPEND INCLUDE_DIRS "${LIB_DIR}/include")
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS})
 
+# Передаём include директории основному таргету
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     -fobjc-arc
     -Wall
     -frtti
+    -fexceptions 
     -fno-objc-arc-exceptions
     -Wno-unknown-pragmas
     -Wno-explicit-specialization-storage-class
@@ -75,7 +83,38 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     -Wno-unused-private-field
 )
 
+set(BOOST_LIBS "")
+foreach(boost_lib container json regex system)
+    set(BOOST_LIB "${CMAKE_SOURCE_DIR}/lib/boost/boost_${boost_lib}.xcframework/ios-arm64/libboost_${boost_lib}.a")
+    if(EXISTS "${BOOST_LIB}")
+        list(APPEND BOOST_LIBS "${BOOST_LIB}")
+    endif()
+endforeach()
+
+set(CURL_LIBRARY "")
+if(EXISTS "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/curl.framework/curl")
+    set(CURL_LIBRARY "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/curl.framework/curl")
+elseif(EXISTS "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/libcurl.a")
+    set(CURL_LIBRARY "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/libcurl.a")
+endif()
+
+set(CURLPP_LIBRARY "")
+if(EXISTS "${CMAKE_SOURCE_DIR}/lib/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
+    set(CURLPP_LIBRARY "${CMAKE_SOURCE_DIR}/lib/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
+endif()
+
+target_include_directories(anixart PRIVATE ${INCLUDE_DIRS})
+target_include_directories(netsess PRIVATE ${INCLUDE_DIRS})
+
+target_link_libraries(anixart ${BOOST_LIBS} ${CURL_LIBRARY} ${CURLPP_LIBRARY})
+target_link_libraries(netsess ${BOOST_LIBS} ${CURL_LIBRARY} ${CURLPP_LIBRARY})
+
 target_link_libraries(${PROJECT_NAME}
+    anixart
+    netsess
+    ${BOOST_LIBS}
+    ${CURL_LIBRARY}
+    ${CURLPP_LIBRARY}
     "-framework UIKit"
     "-framework Foundation"
     "-framework CoreGraphics"
@@ -87,38 +126,6 @@ target_link_libraries(${PROJECT_NAME}
     "-framework Security"
     "-lz"
 )
-
-set(CURL_FRAMEWORK "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/curl.framework/curl")
-if(EXISTS "${CURL_FRAMEWORK}")
-    target_link_libraries(${PROJECT_NAME} "${CURL_FRAMEWORK}")
-else()
-    set(CURL_STATIC "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/libcurl.a")
-    if(EXISTS "${CURL_STATIC}")
-        target_link_libraries(${PROJECT_NAME} "${CURL_STATIC}")
-    endif()
-endif()
-
-if(EXISTS "${CMAKE_SOURCE_DIR}/lib/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
-    target_link_libraries(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/lib/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
-endif()
-
-foreach(boost_lib container json regex system)
-    set(BOOST_LIB "${CMAKE_SOURCE_DIR}/lib/boost/boost_${boost_lib}.xcframework/ios-arm64/libboost_${boost_lib}.a")
-    if(EXISTS "${BOOST_LIB}")
-        target_link_libraries(${PROJECT_NAME} "${BOOST_LIB}")
-    endif()
-endforeach()
-
-set(LIBNETSESS "${CMAKE_SOURCE_DIR}/lib/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
-set(LIBANIXART "${CMAKE_SOURCE_DIR}/lib/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
-
-if(EXISTS "${LIBANIXART}")
-    target_link_libraries(${PROJECT_NAME} -force_load "${LIBANIXART}")
-endif()
-
-if(EXISTS "${LIBNETSESS}")
-    target_link_libraries(${PROJECT_NAME} -force_load "${LIBNETSESS}")
-endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_INFO_PLIST "${RES_DIR}/Info.plist"
