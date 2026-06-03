@@ -106,14 +106,11 @@ else()
     set(CURL_STATIC "${CMAKE_SOURCE_DIR}/lib/curlpp/curl.xcframework/ios-arm64/libcurl.a")
     if(EXISTS "${CURL_STATIC}")
         target_link_libraries(${PROJECT_NAME} "${CURL_STATIC}")
-    else()
-        message(FATAL_ERROR "curl library not found!")
     endif()
 endif()
 
-set(CURLPP_LIB "${CMAKE_SOURCE_DIR}/lib/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
-if(EXISTS "${CURLPP_LIB}")
-    target_link_libraries(${PROJECT_NAME} "${CURLPP_LIB}")
+if(EXISTS "${CMAKE_SOURCE_DIR}/lib/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
+    target_link_libraries(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/lib/curlpp/curlpp.xcframework/ios-arm64/libcurlpp.a")
 endif()
 
 foreach(boost_lib container json regex system)
@@ -123,14 +120,15 @@ foreach(boost_lib container json regex system)
     endif()
 endforeach()
 
-set(NETSESS_LIB "${CMAKE_SOURCE_DIR}/lib/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
-if(EXISTS "${NETSESS_LIB}")
-    target_link_libraries(${PROJECT_NAME} "${NETSESS_LIB}")
+set(LIBNETSESS "${CMAKE_SOURCE_DIR}/lib/aateam/libnetsess.xcframework/ios-arm64/libnetsess.a")
+set(LIBANIXART "${CMAKE_SOURCE_DIR}/lib/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
+
+if(EXISTS "${LIBNETSESS}")
+    target_link_libraries(${PROJECT_NAME} "${LIBNETSESS}")
 endif()
 
-set(ANIXART_LIB "${CMAKE_SOURCE_DIR}/lib/aateam/libanixart.xcframework/ios-arm64/libanixart.a")
-if(EXISTS "${ANIXART_LIB}")
-    target_link_libraries(${PROJECT_NAME} "${ANIXART_LIB}")
+if(EXISTS "${LIBANIXART}")
+    target_link_libraries(${PROJECT_NAME} "${LIBANIXART}")
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
