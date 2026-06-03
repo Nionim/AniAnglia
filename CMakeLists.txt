@@ -50,8 +50,8 @@ foreach(DIR ${SRC_SUBDIRS})
 endforeach()
 
 list(APPEND INCLUDE_DIRS
-    "${LIB_DIR}/aateam/libanixart/include"
-    "${LIB_DIR}/aateam/libnetsess/include"
+    "${CMAKE_SOURCE_DIR}/lib_src/libanixart/include"
+    "${CMAKE_SOURCE_DIR}/lib_src/libnetsess/include"
 )
 
 set(CURL_TEMP_DIR "${CMAKE_BINARY_DIR}/curl_headers")
@@ -65,7 +65,6 @@ list(APPEND INCLUDE_DIRS "${LIB_DIR}/include")
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS})
 
-# Передаём include директории основному таргету
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
