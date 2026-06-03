@@ -47,20 +47,13 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE
     ${HEADERS}
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-    "${SRC_DIR}"
-    "${SRC_DIR}/Auth"
-    "${SRC_DIR}/Common"
-    "${SRC_DIR}/Core"
-    "${SRC_DIR}/Main"
-    "${SRC_DIR}/Misc"
-    "${SRC_DIR}/Profiles"
-    "${SRC_DIR}/Releases"
-    "${LIB_DIR}/include"
-    "${LIB_DIR}/aateam/libanixart/include"
-#    "${LIB_DIR}/aateam/libtorrentrepo/include"
-    "${LIB_DIR}/aateam/libnetsess/include"
-)
+file(GLOB_RECURSE SRC_DIRS LIST_DIRECTORIES true "${SRC_DIR}/*")
+set(INCLUDE_DIRS "${SRC_DIR}")
+foreach(DIR ${SRC_DIRS})
+    if(IS_DIRECTORY ${DIR})
+        list(APPEND INCLUDE_DIRS ${DIR})
+    endif()
+endforeach()
 
 target_link_libraries(${PROJECT_NAME}
     "-framework UIKit"
