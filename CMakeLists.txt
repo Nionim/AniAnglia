@@ -13,9 +13,6 @@ set(CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_OBJC_FLAGS "-fobjc-arc")
-set(CMAKE_OBJCXX_FLAGS "-fobjc-arc")
-
 add_definitions(
     -DBOOST_HANA_CONFIG_ENABLE_STRING_UDL=0
     -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
@@ -29,8 +26,6 @@ set(LANG_DIR      "lang")
 set(ENTITLE_DIR   "ent")
 
 file(GLOB_RECURSE SOURCES
-    "${SRC_DIR}/*.mm"
-    "${SRC_DIR}/*.m"
     "${SRC_DIR}/**/*.mm"
     "${SRC_DIR}/**/*.m"
     "${SRC_DIR}/**/*.c"
@@ -40,7 +35,6 @@ file(GLOB_RECURSE SOURCES
 file(GLOB_RECURSE HEADERS "${SRC_DIR}/**/*.h" "${SRC_DIR}/**/*.hpp")
 
 set(INCLUDE_DIRS "${SRC_DIR}")
-
 file(GLOB_RECURSE SRC_SUBDIRS LIST_DIRECTORIES true "${SRC_DIR}/*")
 foreach(DIR ${SRC_SUBDIRS})
     if(IS_DIRECTORY ${DIR})
@@ -70,6 +64,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 target_compile_options(${PROJECT_NAME} PRIVATE
     -fobjc-arc
     -Wall
+    -frtti
+    -fno-objc-arc-exceptions
     -Wno-unknown-pragmas
     -Wno-explicit-specialization-storage-class
     -Wno-deprecated-builtins
