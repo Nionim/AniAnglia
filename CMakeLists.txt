@@ -65,6 +65,12 @@ list(APPEND INCLUDE_DIRS "${LIB_DIR}/include")
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS})
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    MACOSX_BUNDLE_INFO_PLIST "${RES_DIR}/Info.plist"
+    XCODE_ATTRIBUTE_MARKETING_VERSION "v1.0.0-beta"
+    XCODE_ATTRIBUTE_CURRENT_PROJECT_VERSION "1"
+)
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -138,12 +144,10 @@ if(EXISTS ${ASSET_CATALOG})
     target_sources(${PROJECT_NAME} PRIVATE ${ASSET_CATALOG})
 endif()
 
-file(GLOB_RECURSE STRING_FILES "${LANG_DIR}/*.lproj/Localizable.strings")
-foreach(str_file ${STRING_FILES})
-    string(REPLACE "${LANG_DIR}/" "" rel_path ${str_file})
-    get_filename_component(lproj_dir ${rel_path} DIRECTORY)
-    set_source_files_properties(${str_file} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${lproj_dir}")
-    target_sources(${PROJECT_NAME} PRIVATE ${str_file})
+file(GLOB LPROJ_DIRS "${LANG_DIR}/*.lproj")
+foreach(LPROJ ${LPROJ_DIRS})
+    target_sources(${PROJECT_NAME} PRIVATE ${LPROJ})
+    set_source_files_properties(${LPROJ} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endforeach()
 
 set(ENTITLEMENTS_FILE "${ENTITLE_DIR}/AniSaturn.entitlements")
