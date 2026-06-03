@@ -55,12 +55,24 @@ foreach(DIR ${SRC_DIRS})
     endif()
 endforeach()
 
+file(GLOB_RECURSE XCFRAMEWORKS "${LIB_DIR}/*.xcframework")
+set(FRAMEWORK_INCLUDE_DIRS "")
+foreach(XCFW ${XCFRAMEWORKS})
+    set(ARCH_DIR "${XCFW}/ios-arm64")
+    if(EXISTS ${ARCH_DIR})
+        file(GLOB INCLUDE_CANDIDATES "${ARCH_DIR}/*.framework/Headers" "${ARCH_DIR}/include" "${ARCH_DIR}/Headers")
+        foreach(INC ${INCLUDE_CANDIDATES})
+            if(IS_DIRECTORY ${INC})
+                list(APPEND FRAMEWORK_INCLUDE_DIRS ${INC})
+            endif()
+        endforeach()
+    endif()
+endforeach()
+
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${INCLUDE_DIRS}
+    ${FRAMEWORK_INCLUDE_DIRS}
     "${LIB_DIR}/include"
-    "${LIB_DIR}/aateam/libanixart/include"
-    "${LIB_DIR}/aateam/libtorrentrepo/include"
-    "${LIB_DIR}/aateam/libnetsess/include"
 )
 
 target_link_libraries(${PROJECT_NAME}
