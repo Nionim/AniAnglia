@@ -23,6 +23,8 @@
 ```bash
 git clone https://github.com/AniSaturn/AniSaturn
 # Дальше просто открыть проект в Xcode и собрать его
+# В теории можно и через консоль конечно, но это слишком длинная команда
+# Хотя если вам нужно - Гляньте команду в .github/workflows/build.yml
 ```
 
 ## TODO
