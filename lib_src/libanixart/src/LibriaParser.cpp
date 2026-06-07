@@ -1,6 +1,9 @@
 #include <anixart/LibriaParser.hpp>
 #include <netsess/JsonTools.hpp>
 #include <boost/regex.hpp>
+#include <algorithm>
+
+#include "BaseUrls.h"
 
 static constexpr size_t cstrlen(const char* const str) {
 	return std::char_traits<char>::length(str);
@@ -9,7 +12,7 @@ static constexpr size_t cstrlen(const char* const str) {
 namespace anixart::parsers {
 	using network::json::ParseJson;
 
-	const std::string_view EP_INFO_URL_S = "https://api.anilibria.tv/v2/getTitle?filter=player.host,player.playlist.";
+	const std::string_view EP_INFO_URL_S =  anixart::urls::EP_INFO_URL_S;
 
 	static std::string create_ep_url(const std::string& host, const std::string& url) {
 		std::string out_url;
@@ -23,17 +26,13 @@ namespace anixart::parsers {
 	LibriaParser::LibriaParser() {}
 
 	bool LibriaParser::valid_host(const std::string& host) const {
-		// "anilibria.tv", "new.anilib.one", "inori.anilib.one", "emilia.anilib.one", "new.anilib.moe", "inori.anilib.moe", "emilia.anilib.moe"
-		if (host == "anilibria.tv") {
-			return true;
-		}
-		else if (host.rfind("anilib.one") != std::string::npos) {
-			return true;
-		}
-		else if (host.rfind("libria.fun") != std::string::npos) {
-			return true;
-		}
-		return false;
+    	using namespace de_anixart::de_libria::domains;
+		
+		if (std::find(libria_exact.begin(), libria_exact.end(), host) != libria_exact.end())
+        	return true;
+
+		return std::any_of(libria_partial.begin(), libria_partial.end(),
+        	[&](const std::string& p) { return host.find(p) != std::string::npos; });
 	}
 
 	std::string_view LibriaParser::get_name() const {

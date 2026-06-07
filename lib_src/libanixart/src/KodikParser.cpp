@@ -1,6 +1,10 @@
 #include <anixart/KodikParser.hpp>
 #include <ext/base64.hpp>
 #include <boost/regex.hpp>
+#include <algorithm>
+#include <cctype> 
+
+#include "BaseUrls.h"
 
 // if set this to positive value, then KodikParser doesn't try to get it
 constexpr int32_t UNIVERSAL_CAESAR_OFFSET = -1;
@@ -17,28 +21,25 @@ static void extend_url_protocol(std::string& url) {
 }
 
 namespace anixart::parsers {
-	constexpr std::string_view LINKS_URL_S = "https://kodik.biz/api/video-links?p=56a768d08f43091901c44b54fe970049&link=";
-	constexpr std::string_view KODIK_HOST = "kodikplayer.com";
-	constexpr std::string_view KODIK_FTOR_URL = "https://kodikplayer.com/ftor";
-	constexpr std::string_view KODIK_INFO_URL = "https://kodikplayer.com";
+	constexpr std::string_view LINKS_URL_S = anixart::urls::LINKS_URL_S;
+	constexpr std::string_view KODIK_HOST = anixart::urls::KODIK_HOST;
+	constexpr std::string_view KODIK_FTOR_URL = anixart::urls::KODIK_FTOR_URL;
+	constexpr std::string_view KODIK_INFO_URL = anixart::urls::KODIK_INFO_URL;
 
 	KodikParser::KodikParser() : _caesar_offset(UNIVERSAL_CAESAR_OFFSET) {
 		_session.set_default_headers(get_default_headers());
 	}
 
 	bool KodikParser::valid_host(const std::string& host) const {
-		if (host == "kodik.cc") {
-			return true;
-		}
-		else if (host == "kodikplayer.com") {
-			return true;
-		}
-		else if (host == "aniqit.com") {
-			return true;
-		}
-		return false;
-	}
+    	using namespace de_anixart::de_kodik::domains;
+		
+		if (std::find(kodik_exact.begin(), kodik_exact.end(), host) != kodik_exact.end())
+        	return true;
 
+		return std::any_of(kodik_partial.begin(), kodik_partial.end(),
+        	[&](const std::string& p) { return host.find(p) != std::string::npos; });
+	}
+	
 	std::string_view KodikParser::get_name() const {
 		return "KodikParser";
 	}
