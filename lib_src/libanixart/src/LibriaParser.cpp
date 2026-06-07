@@ -12,7 +12,7 @@ static constexpr size_t cstrlen(const char* const str) {
 namespace anixart::parsers {
 	using network::json::ParseJson;
 
-	const std::string_view EP_INFO_URL_S =  anixart::urls::EP_INFO_URL_S;
+	const std::string_view EP_INFO_URL_S =  de_anixart::urls::EP_INFO_URL_S;
 
 	static std::string create_ep_url(const std::string& host, const std::string& url) {
 		std::string out_url;

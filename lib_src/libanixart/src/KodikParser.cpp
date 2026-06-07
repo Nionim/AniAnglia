@@ -21,10 +21,10 @@ static void extend_url_protocol(std::string& url) {
 }
 
 namespace anixart::parsers {
-	constexpr std::string_view LINKS_URL_S = anixart::urls::LINKS_URL_S;
-	constexpr std::string_view KODIK_HOST = anixart::urls::KODIK_HOST;
-	constexpr std::string_view KODIK_FTOR_URL = anixart::urls::KODIK_FTOR_URL;
-	constexpr std::string_view KODIK_INFO_URL = anixart::urls::KODIK_INFO_URL;
+	constexpr std::string_view LINKS_URL_S = de_anixart::urls::LINKS_URL_S;
+	constexpr std::string_view KODIK_HOST = de_anixart::urls::KODIK_HOST;
+	constexpr std::string_view KODIK_FTOR_URL = de_anixart::urls::KODIK_FTOR_URL;
+	constexpr std::string_view KODIK_INFO_URL = de_anixart::urls::KODIK_INFO_URL;
 
 	KodikParser::KodikParser() : _caesar_offset(UNIVERSAL_CAESAR_OFFSET) {
 		_session.set_default_headers(get_default_headers());
