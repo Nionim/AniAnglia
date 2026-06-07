@@ -2,9 +2,9 @@
 #include <ext/base64.hpp>
 #include <boost/regex.hpp>
 #include <algorithm>
-#include <cctype> 
+#include <cctype>
 
-#include "BaseUrls.h"
+#include "util/BaseUrls.h"
 
 // if set this to positive value, then KodikParser doesn't try to get it
 constexpr int32_t UNIVERSAL_CAESAR_OFFSET = -1;
