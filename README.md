@@ -35,9 +35,6 @@ xcodebuild -project build/AniSaturn.xcodeproj -scheme AniSaturn \
   -sdk iphoneos -derivedDataPath build_derived \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
   PRODUCT_BUNDLE_IDENTIFIER="delta.cion.anisaturn"
-
-# Некоторые либы (libanixart и libnetsess) не были загружены по причине АП
-# Если автор оригинала разешил - Я выложу либы полностью.
 ```
 
 ## TODO
