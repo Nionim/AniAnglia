@@ -42,6 +42,8 @@ xcodebuild -project build/AniSaturn.xcodeproj -scheme AniSaturn \
 <p align="center">
     <a href="https://github.com/AniSaturn/AniSaturn_Closed_beta">Closed Beta Url</a>
 	<br>
+    <a href="https://github.com/AniSaturn/AniSaturn_Swift">Swift Port (Private repo)</a>
+	<br>
     <a href="https://github.com/AniSaturn/AniSaturn?tab=contributing-ov-file">Contributing.md file</a> 
   <br><br>
 	Если участвуете в разработке - Прошу - Вступите в дс/тг для связи. Контакты можно найти на профиле Nionim'а или в описании самой организации.
@@ -64,8 +66,8 @@ xcodebuild -project build/AniSaturn.xcodeproj -scheme AniSaturn \
 
 <p align="center">
     <a href="#">
-        <img src="https://img.shields.io/github/last-commit/AniSaturn/AniSaturn?display_timestamp=committer&style=flat-square&color=000000"></a>   
+        <img src="https://img.shields.io/github/last-commit/AniSaturn/AniSaturn_Swift?display_timestamp=committer&style=flat-square&color=000000"></a>   
     <a href="#">
-        <img src="https://img.shields.io/github/created-at/AniSaturn/AniSaturn?style=flat-square&color=000000"></a>
+        <img src="https://img.shields.io/github/created-at/AniSaturn/AniSaturn_Swift?style=flat-square&color=000000"></a>
 </p>
 
