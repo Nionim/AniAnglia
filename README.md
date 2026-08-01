@@ -66,8 +66,8 @@ xcodebuild -project build/AniSaturn.xcodeproj -scheme AniSaturn \
 
 <p align="center">
     <a href="#">
-        <img src="https://img.shields.io/github/last-commit/AniSaturn/AniSaturn_Swift?display_timestamp=committer&style=flat-square&color=000000"></a>   
+        <img src="https://img.shields.io/github/last-commit/AniSaturn/AniSaturn?display_timestamp=committer&style=flat-square&color=000000"></a>   
     <a href="#">
-        <img src="https://img.shields.io/github/created-at/AniSaturn/AniSaturn_Swift?style=flat-square&color=000000"></a>
+        <img src="https://img.shields.io/github/created-at/AniSaturn/AniSaturn?style=flat-square&color=000000"></a>
 </p>
 
