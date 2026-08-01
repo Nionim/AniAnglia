@@ -37,6 +37,17 @@ xcodebuild -project build/AniSaturn.xcodeproj -scheme AniSaturn \
   PRODUCT_BUNDLE_IDENTIFIER="delta.cion.anisaturn"
 ```
 
+<H2 align="center">-==[ For Devs ]==-</H2>
+
+<p align="center">
+    <a href="https://github.com/AniSaturn/AniSaturn_Closed_beta">Closed Beta Url</a>
+	<br>
+    <a href="https://github.com/AniSaturn/AniSaturn?tab=contributing-ov-file">Contributing.md file</a> 
+  <br><br>
+	Если участвуете в разработке - Прошу - Вступите в дс/тг для связи. Контакты можно найти на профиле Nionim'а или в описании самой организации.
+</p>
+
+
 ## TODO
 Этот репозиторий создан чисто для удобства.
 <br> Потом я возможно просто создам свой аналог.
