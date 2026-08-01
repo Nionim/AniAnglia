@@ -34,12 +34,14 @@ jobs:
         run: |
           COMMIT_HASH=$(git rev-parse --short=8 HEAD)
           echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+
           if [[ "${{ github.event.inputs.bundle_id }}" == *"beta"* ]]; then
             VERSION="${{ github.event.inputs.version_short }}_($COMMIT_HASH)"
-            VERSION="Dev($COMMIT_HASH)"
           else
             VERSION="${{ github.event.inputs.version_short }}"
           fi
+          echo "final_version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Project version: $VERSION"
 
       - name: Install CMake
         run: brew install cmake
