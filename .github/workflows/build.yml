@@ -29,6 +29,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Get Commit
+        id: version
+        run: |
+          COMMIT_HASH=$(git rev-parse --short=8 HEAD)
+          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event.inputs.bundle_id }}" == *"beta"* ]]; then
+            VERSION="${{ github.event.inputs.version_short }}_($COMMIT_HASH)"
+            VERSION="Dev($COMMIT_HASH)"
+          else
+            VERSION="${{ github.event.inputs.version_short }}"
+          fi
+
       - name: Install CMake
         run: brew install cmake
 
@@ -37,7 +49,7 @@ jobs:
           cmake -G Xcode \
           -B build \
           -DCMAKE_SYSTEM_NAME=iOS \
-          -DVER_SHORT="${{ github.event.inputs.version_short }}" \
+          -DVER_SHORT="${{ steps.version.outputs.final_version }}" \
           -DVER_BUILD="${{ github.event.inputs.version_build }}" \
           -DBUNDLE_ID="${{ github.event.inputs.bundle_id }}"
 
