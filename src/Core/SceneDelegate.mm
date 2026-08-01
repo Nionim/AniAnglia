@@ -15,15 +15,14 @@
 @implementation SceneDelegate
 
 
--(void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
-    // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-    // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-    // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-    
+- (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
     if (_window == nil) {
-        _window = [[MainWindow alloc] initWithWindowScene:(UIWindowScene*)scene];
-
-        [[UIApplication sharedApplication] delegate].window = _window;
+        UIWindowScene *windowScene = (UIWindowScene *)scene;
+        _window = [[MainWindow alloc] initWithWindowScene:windowScene];
+        
+        _window.frame = windowScene.coordinateSpace.bounds;
+         
+        [UIApplication sharedApplication].delegate.window = _window;
         [_window makeKeyAndVisible];
     }
 }
