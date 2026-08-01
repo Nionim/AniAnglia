@@ -154,6 +154,12 @@ if(EXISTS ${ASSET_CATALOG})
     target_sources(${PROJECT_NAME} PRIVATE ${ASSET_CATALOG})
 endif()
 
+set(LAUNCH_SCREEN "${RES_DIR}/LaunchScreen.storyboard")
+if(EXISTS ${LAUNCH_SCREEN})
+    set_source_files_properties(${LAUNCH_SCREEN} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    target_sources(${PROJECT_NAME} PRIVATE ${LAUNCH_SCREEN})
+endif()
+
 file(GLOB LPROJ_DIRS "${LANG_DIR}/*.lproj")
 foreach(LPROJ ${LPROJ_DIRS})
     target_sources(${PROJECT_NAME} PRIVATE ${LPROJ})
