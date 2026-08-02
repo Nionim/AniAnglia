@@ -4,6 +4,18 @@
 
 <H1 align="center">-==[ AniSaturn - Fork of AniAnglia ]==-</H1>
 
+<p align="center">
+  AniSaturn - Неофициальный клиент Anixart, разработанный для IOS.
+  <br> Клиент является форком AniAnglia и активно поддерживается.
+</p>
+
+---
+
+> [!WARNING]  
+> Пожалуйста! При проблемах/Багах/Идеях - Создайте ISSUE и максимально подробно опишите ваш_вопрос/вашу_идею.
+
+---
+
 <H2 align="center">-==[ Скачать ]==-</H2>
 <p align="center">
     <a href="https://github.com/AniSaturn/AniSaturn/actions">Actions</a> или с 
