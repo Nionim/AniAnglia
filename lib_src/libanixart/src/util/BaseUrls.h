@@ -11,10 +11,11 @@ namespace de_anixart::urls {
     inline constexpr std::string_view KODIK_FTOR_URL = "https://kodikplayer.com/ftor";
     inline constexpr std::string_view KODIK_INFO_URL = "https://kodikplayer.com";
 
-    // Libria
+    // Libria v2
     inline constexpr std::string_view EP_INFO_URL_S = "https://api.anilibria.tv/v2/getTitle?filter=player.host,player.playlist.";
 
-    // Sibnet.. Maybe later..
+    // Libria v1
+    inline constexpr std::string_view RELEASE_API_URL_V1 = "https://anilibria.top/api/v1/anime/releases/";
 }
 
 namespace de_anixart::de_kodik::domains {
